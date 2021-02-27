@@ -1,0 +1,21 @@
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\obj\Debug\BrainStorm.csprojAssemblyReference.cache
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\obj\Debug\BrainStorm.BrainStorm0.resources
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\obj\Debug\BrainStorm.Properties.Resources.resources
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\obj\Debug\BrainStorm.csproj.GenerateResource.cache
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\obj\Debug\BrainStorm.csproj.CoreCompileInputs.cache
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\bin\Debug\BrainStorm.exe.config
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\bin\Debug\BrainStorm.exe
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\bin\Debug\BrainStorm.pdb
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\obj\Debug\BrainStorm.exe
+C:\Users\admin\source\repos\BrainStorm\BrainStorm\obj\Debug\BrainStorm.pdb
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\bin\Debug\BrainStorm.exe.config
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\bin\Debug\BrainStorm.exe
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\bin\Debug\BrainStorm.pdb
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.csprojAssemblyReference.cache
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.BrainStorm0.resources
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.Properties.Resources.resources
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.csproj.GenerateResource.cache
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.csproj.CoreCompileInputs.cache
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.exe
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.pdb
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.FormSplashScreen.resources
