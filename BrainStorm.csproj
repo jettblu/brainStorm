@@ -64,8 +64,10 @@
     </Compile>
     <Compile Include="Graphics\StormControl.cs" />
     <Compile Include="nlp\googleComplete.cs" />
+    <Compile Include="nlp\LanguageState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="utils.cs" />
     <EmbeddedResource Include="FormMainInterface.resx">
       <DependentUpon>FormMainInterface.cs</DependentUpon>
     </EmbeddedResource>

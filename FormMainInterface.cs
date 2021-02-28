@@ -50,11 +50,55 @@ namespace BrainStorm
         }
 
         private async void btnAutoComplete_ClickAsync(object sender, EventArgs e)
-        {
+        {   
             var autoComplete = new googleComplete();
-            var suggestions = new List<GoogleSuggestion>();
-            await autoComplete.GetSearchSuggestions();
-            suggestions = autoComplete.AutoCompleteSuggestions;
+            await autoComplete.GetSearchSuggestions(tboxPhrase.Text);
+            //return if no autocomplete suggestions are returned
+            if (autoComplete.AutoCompleteSuggestions.Count == 0)
+            {
+                return;
+            }
+            createSuggestionGrid(autoComplete);
+        }
+
+        private void createSuggestionGrid(googleComplete autoComplete)
+        {
+            var suggestedWordsPhrase = "";
+            var suggestedLettersPhrase = "";
+            var generalLettersPhrase = "";
+            MainGrid.ClearShapes();
+            // create 3 by 1 space that will contain likely letters, likely words, and general letters bin
+            MainGrid.Cols = 3;
+            MainGrid.Rows = 1;
+            MainGrid.DrawLines();
+            foreach (var likelyWord in autoComplete.LikelyWords)
+            {
+                suggestedWordsPhrase += $"{likelyWord.Key}\n";
+            }
+            foreach (var likelyLetter in autoComplete.LikelyLetters)
+            {
+                suggestedLettersPhrase += $"{likelyLetter}\n";
+            }
+            var isNewLine = false;
+            foreach (var genLetter in autoComplete.GenLetters)
+            {
+                if (isNewLine)
+                {
+                    generalLettersPhrase += $"{genLetter}\n";
+                }
+                else
+                {
+                    generalLettersPhrase += $"{genLetter}\t";
+                }
+                isNewLine = !isNewLine;
+
+            }
+            var suggestedWordsShape = new Shape(0, 2, Color.Blue, MainGrid, 25, suggestedWordsPhrase);
+            var suggestedLettersShape = new Shape(0, 1, Color.Blue, MainGrid, 15, suggestedLettersPhrase);
+            var generalLettersShape = new Shape(0, 0, Color.WhiteSmoke, MainGrid, 10, generalLettersPhrase);
+            suggestedWordsShape.DrawBox();
+            suggestedLettersShape.DrawBox();
+            generalLettersShape.DrawBox();
         }
     }
 }

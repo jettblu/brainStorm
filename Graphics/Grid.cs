@@ -46,14 +46,14 @@ namespace BrainStorm.Graphics
             Cols = boardCols;
             CellWidth = Bounds.Width / boardCols;
             CellHeight = Bounds.Height / boardRows;
-            P = new Pen(Color.Black);
+            P = new Pen(Color.WhiteSmoke);
             // Create a Graphics object for the Control.
             G = control.CreateGraphics();
         }
 
         public void DrawLines()
-        {   
-            G.Clear(Color.WhiteSmoke);
+        {
+            G.Clear(Color.Black);
             int y = 0;
             int x = 0;
             for (int i = 0; i < Rows-1; i++)
@@ -78,7 +78,7 @@ namespace BrainStorm.Graphics
                 shape.FlashEnabled = false;
             }
             AllShapes = new List<Shape>();
-            G.Clear(Color.WhiteSmoke);
+            G.Clear(Color.Black);
             DrawLines();
         }
 

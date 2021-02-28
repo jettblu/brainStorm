@@ -52,6 +52,7 @@ namespace BrainStorm.Graphics
         public System.Drawing.Graphics G { get; set; }
         public Pen P { get; set; }
         public Brush B { get; set; }
+        public Color Color { get; set; }
         public Brush TextBrush = new SolidBrush(Color.GhostWhite);
         static Font TextFont = new Font("Arial", 16);
         public Rectangle ShapeBounds { get; set; }
@@ -59,7 +60,7 @@ namespace BrainStorm.Graphics
         public Grid CurrGrid { get; set; }
         public string Text { get; set; }
 
-        public Shape(int shapeRow, int shapeCol, Color color, Grid grid, int hertz)
+        public Shape(int shapeRow, int shapeCol, Color color, Grid grid, int hertz, string text = "sample text")
         {   
             Row = shapeRow;
             Col = shapeCol;
@@ -71,10 +72,11 @@ namespace BrainStorm.Graphics
             CurrGrid = grid;
             P = new Pen(color);
             B = new SolidBrush(color);
+            Color = color;
             ShapeBounds = new Rectangle((Col * CurrGrid.CellWidth) + Padding, (Row * CurrGrid.CellHeight) + Padding, CurrGrid.CellWidth - Padding * 2, CurrGrid.CellHeight - Padding * 2);
             // add current shape to all shapes
             grid.AllShapes.Add(this);
-            Text = "Hello UNIVERSE!!!!\nPOOOOOP";
+            Text = text;
         }
 
         public void UpdateShapeBounds()
@@ -105,7 +107,7 @@ namespace BrainStorm.Graphics
             }
             else
             {
-                B = new SolidBrush(Color.Blue);
+                B = new SolidBrush(Color);
             CurrGrid.G.FillRectangle(B, ShapeBounds);
             }
             IsDisplayed = !IsDisplayed;

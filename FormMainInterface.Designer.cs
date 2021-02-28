@@ -49,6 +49,8 @@
             this.pboxUndo = new System.Windows.Forms.PictureBox();
             this.pboxClear = new System.Windows.Forms.PictureBox();
             this.btnAutoComplete = new System.Windows.Forms.Button();
+            this.tboxPhrase = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -88,6 +90,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.SystemColors.Info;
             this.label6.Location = new System.Drawing.Point(350, 66);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(37, 20);
@@ -124,6 +127,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.SystemColors.Info;
             this.label4.Location = new System.Drawing.Point(177, 65);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(36, 20);
@@ -133,6 +137,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.SystemColors.Info;
             this.label5.Location = new System.Drawing.Point(15, 65);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(45, 20);
@@ -166,6 +171,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.Info;
             this.label3.Location = new System.Drawing.Point(877, 65);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 20);
@@ -175,6 +181,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.Info;
             this.label2.Location = new System.Drawing.Point(715, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 20);
@@ -237,6 +244,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.Info;
             this.label1.Location = new System.Drawing.Point(7, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 20);
@@ -270,6 +278,7 @@
             // 
             this.gboxControls.Controls.Add(this.pboxUndo);
             this.gboxControls.Controls.Add(this.pboxClear);
+            this.gboxControls.ForeColor = System.Drawing.SystemColors.Info;
             this.gboxControls.Location = new System.Drawing.Point(833, 625);
             this.gboxControls.Name = "gboxControls";
             this.gboxControls.Size = new System.Drawing.Size(473, 138);
@@ -279,7 +288,7 @@
             // 
             // pboxUndo
             // 
-            this.pboxUndo.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pboxUndo.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pboxUndo.Location = new System.Drawing.Point(280, 15);
             this.pboxUndo.Name = "pboxUndo";
             this.pboxUndo.Size = new System.Drawing.Size(178, 112);
@@ -305,11 +314,33 @@
             this.btnAutoComplete.UseVisualStyleBackColor = true;
             this.btnAutoComplete.Click += new System.EventHandler(this.btnAutoComplete_ClickAsync);
             // 
+            // tboxPhrase
+            // 
+            this.tboxPhrase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tboxPhrase.Location = new System.Drawing.Point(81, 635);
+            this.tboxPhrase.Name = "tboxPhrase";
+            this.tboxPhrase.Size = new System.Drawing.Size(185, 26);
+            this.tboxPhrase.TabIndex = 14;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.SystemColors.Info;
+            this.label7.Location = new System.Drawing.Point(12, 635);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(63, 20);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "Phrase:";
+            // 
             // BrainStorm0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1318, 764);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.tboxPhrase);
             this.Controls.Add(this.btnAutoComplete);
             this.Controls.Add(this.gboxControls);
             this.Controls.Add(this.btnClear);
@@ -331,6 +362,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pboxUndo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxClear)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -357,6 +389,8 @@
         private System.Windows.Forms.PictureBox pboxUndo;
         private System.Windows.Forms.PictureBox pboxClear;
         private System.Windows.Forms.Button btnAutoComplete;
+        private System.Windows.Forms.TextBox tboxPhrase;
+        private System.Windows.Forms.Label label7;
     }
 }
 
