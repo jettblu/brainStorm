@@ -256,6 +256,7 @@
             this.pboxInterface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pboxInterface.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.pboxInterface.Location = new System.Drawing.Point(13, 120);
             this.pboxInterface.Name = "pboxInterface";
             this.pboxInterface.Size = new System.Drawing.Size(1293, 484);
@@ -276,6 +277,7 @@
             // 
             // gboxControls
             // 
+            this.gboxControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.gboxControls.Controls.Add(this.pboxUndo);
             this.gboxControls.Controls.Add(this.pboxClear);
             this.gboxControls.ForeColor = System.Drawing.SystemColors.Info;
@@ -316,8 +318,7 @@
             // 
             // tboxPhrase
             // 
-            this.tboxPhrase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tboxPhrase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tboxPhrase.Location = new System.Drawing.Point(81, 635);
             this.tboxPhrase.Name = "tboxPhrase";
             this.tboxPhrase.Size = new System.Drawing.Size(185, 26);
@@ -325,6 +326,7 @@
             // 
             // label7
             // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.SystemColors.Info;
             this.label7.Location = new System.Drawing.Point(12, 635);
@@ -349,7 +351,9 @@
             this.Name = "BrainStorm0";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Brain Storm";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BrainStorm0_FormClosed);
+            this.Load += new System.EventHandler(this.BrainStorm0_Load);
             this.gboxOutput.ResumeLayout(false);
             this.gboxOutput.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).EndInit();

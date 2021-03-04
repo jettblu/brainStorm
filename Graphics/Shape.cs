@@ -13,11 +13,15 @@ using Timer = System.Windows.Forms.Timer;
 namespace BrainStorm.Graphics
 {
     public class Shape : Form
-    {   
+    {
         public List<Shape> AllShapes = new List<Shape>();
+
         // grid properties
-        public int Padding { get; set; }
-        public int Row { get; set; }
+        public int HorPadding { get; set; }
+
+        public int VertPadding { get; set; }
+
+    public int Row { get; set; }
         public int Col { get; set; }
         public bool Fill { get; set; }
         // flashing properties
@@ -60,11 +64,12 @@ namespace BrainStorm.Graphics
         public Grid CurrGrid { get; set; }
         public string Text { get; set; }
 
-        public Shape(int shapeRow, int shapeCol, Color color, Grid grid, int hertz, string text = "sample text")
+        public Shape(int shapeRow, int shapeCol, Color color, Grid grid, int hertz, string text = "sample text", int horPadding=5, int vertPadding=10)
         {   
             Row = shapeRow;
             Col = shapeCol;
-            Padding = 5;
+            HorPadding = horPadding;
+            VertPadding = vertPadding;
             Hertz = hertz;
             Fill = IsDisplayed = FlashEnabled = true;
             Count = 0;
@@ -73,7 +78,7 @@ namespace BrainStorm.Graphics
             P = new Pen(color);
             B = new SolidBrush(color);
             Color = color;
-            ShapeBounds = new Rectangle((Col * CurrGrid.CellWidth) + Padding, (Row * CurrGrid.CellHeight) + Padding, CurrGrid.CellWidth - Padding * 2, CurrGrid.CellHeight - Padding * 2);
+            ShapeBounds = new Rectangle((Col * CurrGrid.CellWidth) + HorPadding, (Row * CurrGrid.CellHeight) + VertPadding, CurrGrid.CellWidth - HorPadding * 2, CurrGrid.CellHeight - VertPadding * 2);
             // add current shape to all shapes
             grid.AllShapes.Add(this);
             Text = text;
@@ -81,7 +86,7 @@ namespace BrainStorm.Graphics
 
         public void UpdateShapeBounds()
         {
-            ShapeBounds = new Rectangle((Col * CurrGrid.CellWidth) + Padding, (Row * CurrGrid.CellHeight) + Padding, CurrGrid.CellWidth - Padding * 2, CurrGrid.CellHeight - Padding * 2);
+            ShapeBounds = new Rectangle((Col * CurrGrid.CellWidth) + HorPadding, (Row * CurrGrid.CellHeight) + VertPadding, CurrGrid.CellWidth - HorPadding * 2, CurrGrid.CellHeight - VertPadding * 2);
         }
 
         public void DrawBox()

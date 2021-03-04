@@ -18,8 +18,6 @@ namespace BrainStorm
         public BrainStorm0()
         {
             InitializeComponent();
-            MainGrid = new Grid(pboxInterface, 2, 2);
-            new StormControl(pboxClear, "Clear");
         }
 
         private void btnTest_Click(object sender, EventArgs e)
@@ -68,9 +66,8 @@ namespace BrainStorm
             var generalLettersPhrase = "";
             MainGrid.ClearShapes();
             // create 3 by 1 space that will contain likely letters, likely words, and general letters bin
-            MainGrid.Cols = 3;
-            MainGrid.Rows = 1;
-            MainGrid.DrawLines();
+            MainGrid.Cols = 7;
+            MainGrid.Rows = 3;
             foreach (var likelyWord in autoComplete.LikelyWords)
             {
                 suggestedWordsPhrase += $"{likelyWord.Key}\n";
@@ -93,12 +90,18 @@ namespace BrainStorm
                 isNewLine = !isNewLine;
 
             }
-            var suggestedWordsShape = new Shape(0, 2, Color.Blue, MainGrid, 25, suggestedWordsPhrase);
-            var suggestedLettersShape = new Shape(0, 1, Color.Blue, MainGrid, 15, suggestedLettersPhrase);
-            var generalLettersShape = new Shape(0, 0, Color.WhiteSmoke, MainGrid, 10, generalLettersPhrase);
+            var suggestedWordsShape = new Shape(1, 6, Color.Blue, MainGrid, 25, suggestedWordsPhrase);
+            var suggestedLettersShape = new Shape(1, 3, Color.Blue, MainGrid, 15, suggestedLettersPhrase);
+            var generalLettersShape = new Shape(1, 0, Color.WhiteSmoke, MainGrid, 10, generalLettersPhrase);
             suggestedWordsShape.DrawBox();
             suggestedLettersShape.DrawBox();
             generalLettersShape.DrawBox();
+        }
+        // establish base grid on form load
+        private void BrainStorm0_Load(object sender, EventArgs e)
+        {
+            MainGrid = new Grid(pboxInterface, 2, 2);
+            new StormControl(pboxClear, "Clear");
         }
     }
 }
