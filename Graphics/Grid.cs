@@ -39,16 +39,17 @@ namespace BrainStorm.Graphics
         public Pen P { get; set; }
         public System.Drawing.Graphics G { get; set; }
 
-        public Grid(Control control, int boardRows, int boardCols)
+        public Grid(Rectangle rectangle, int boardRows, int boardCols)
         {
-            Bounds = control.Bounds;
+            Bounds = rectangle;
+            
             Rows = boardRows;
             Cols = boardCols;
             CellWidth = Bounds.Width / boardCols;
             CellHeight = Bounds.Height / boardRows;
             P = new Pen(Color.WhiteSmoke);
             // Create a Graphics object for the Control.
-            G = control.CreateGraphics();
+            G = BrainStorm0.MainControl.CreateGraphics();
         }
 
         public void DrawLines()
@@ -70,7 +71,7 @@ namespace BrainStorm.Graphics
             UpdateShapes();
         }
 
-
+        // remove shapes and grids
         public void ClearShapes()
         {
             foreach (var shape in AllShapes)
@@ -81,6 +82,13 @@ namespace BrainStorm.Graphics
             G.Clear(Color.Black);
             DrawLines();
         }
+        // redraw grid
+        public void RedrawGrid()
+        {
+            G.Clear(Color.Black);
+            DrawLines();
+        }
+        
 
         public void UpdateShapes()
         {

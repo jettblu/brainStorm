@@ -51,6 +51,7 @@
             this.btnAutoComplete = new System.Windows.Forms.Button();
             this.tboxPhrase = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnTrain = new System.Windows.Forms.Button();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -335,12 +336,24 @@
             this.label7.TabIndex = 14;
             this.label7.Text = "Phrase:";
             // 
+            // btnTrain
+            // 
+            this.btnTrain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnTrain.Location = new System.Drawing.Point(137, 667);
+            this.btnTrain.Name = "btnTrain";
+            this.btnTrain.Size = new System.Drawing.Size(119, 40);
+            this.btnTrain.TabIndex = 18;
+            this.btnTrain.Text = "Train";
+            this.btnTrain.UseVisualStyleBackColor = true;
+            this.btnTrain.Click += new System.EventHandler(this.btnTrain_Click);
+            // 
             // BrainStorm0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1318, 764);
+            this.Controls.Add(this.btnTrain);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.tboxPhrase);
             this.Controls.Add(this.btnAutoComplete);
@@ -395,6 +408,7 @@
         private System.Windows.Forms.Button btnAutoComplete;
         private System.Windows.Forms.TextBox tboxPhrase;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnTrain;
     }
 }
 

@@ -27,9 +27,23 @@ namespace BrainStorm.Graphics
         // flashing properties
         private bool IsDisplayed { get; set; }
         private bool _flashEnabled;
+        private int _hertz;
         public int Count {get; set;}
         public Timer FlashTimer { get; set; }
-        public int Hertz { get; set; }
+        public int Hertz
+        {
+            get => _hertz;
+            set
+            {
+                _hertz = value;
+                // update timer interval, if changing freq. value of flashing shape
+                if (FlashEnabled)
+                {
+                    FlashTimer.Interval = 1000 / value; 
+                }
+              
+            } 
+        }
         public bool FlashEnabled
         {
           get => _flashEnabled;
@@ -56,8 +70,9 @@ namespace BrainStorm.Graphics
         public System.Drawing.Graphics G { get; set; }
         public Pen P { get; set; }
         public Brush B { get; set; }
+        // brush used for flashing... hardcoded as black
+        public Brush BFlash  = new SolidBrush(Color.Black);
         public Color Color { get; set; }
-        public Brush TextBrush = new SolidBrush(Color.GhostWhite);
         static Font TextFont = new Font("Arial", 16);
         public Rectangle ShapeBounds { get; set; }
 
@@ -83,7 +98,12 @@ namespace BrainStorm.Graphics
             grid.AllShapes.Add(this);
             Text = text;
         }
-
+        // a method that allows for creation of grids inside grids... make padding static to implement
+        /*public static Rectangle CreateRectangle(int shapeRow, int shapeCol, Grid grid)
+        {
+            var result = new Rectangle((shapeCol * grid.CellWidth) + HorPadding, (shapeRow * grid.CellHeight) + VertPadding, grid.CellWidth - HorPadding * 2, grid.CellHeight - VertPadding * 2);
+            return result;
+        }*/
         public void UpdateShapeBounds()
         {
             ShapeBounds = new Rectangle((Col * CurrGrid.CellWidth) + HorPadding, (Row * CurrGrid.CellHeight) + VertPadding, CurrGrid.CellWidth - HorPadding * 2, CurrGrid.CellHeight - VertPadding * 2);
@@ -97,7 +117,7 @@ namespace BrainStorm.Graphics
             {
                 CurrGrid.G.FillRectangle(B, ShapeBounds);
             }
-            DrawString(Text);
+            DrawString(Text, BFlash);
         }
 
         // This is the method to run when the timer is raised.
@@ -107,16 +127,15 @@ namespace BrainStorm.Graphics
             Count++;
             if (IsDisplayed)
             {
-                B = new SolidBrush(Color.Black);
                 CurrGrid.G.FillRectangle(B, ShapeBounds);
+                DrawString(Text, BFlash);
             }
             else
             {
-                B = new SolidBrush(Color);
-            CurrGrid.G.FillRectangle(B, ShapeBounds);
+                CurrGrid.G.FillRectangle(BFlash, ShapeBounds);
+                DrawString(Text, B);
             }
             IsDisplayed = !IsDisplayed;
-            DrawString(Text);
         }
 
         public void DrawCircle()
@@ -127,7 +146,7 @@ namespace BrainStorm.Graphics
             {
                 CurrGrid.G.FillRectangle(B, ShapeBounds);
             }
-            DrawString(Text);
+            DrawString(Text, BFlash);
         }
 
         // see if shape already exists and if it falls within the grid
@@ -143,14 +162,14 @@ namespace BrainStorm.Graphics
             return true;
         }
 
-        public void DrawString(string innerText)
+        public void DrawString(string innerText, Brush textBrush)
         {
             var x = (ShapeBounds.Right+ShapeBounds.Left)/2;
             var y = (ShapeBounds.Top+ShapeBounds.Bottom)/2;
             StringFormat stringFormat = new StringFormat();
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
-            CurrGrid.G.DrawString(innerText, TextFont, TextBrush, x, y, stringFormat);
+            CurrGrid.G.DrawString(innerText, TextFont, textBrush, x, y, stringFormat);
         }
 
     }

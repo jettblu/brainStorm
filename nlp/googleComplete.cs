@@ -69,8 +69,16 @@ namespace BrainStorm.nlp
                 //case where phrase lies within single word suggestion
                 catch (Exception IndexError)
                 {
+                    try
+                    {
+                        nextWord = autoPhrase.Substring(phraseEnd);
+                    }
+                    // case where autocomplete suggestion is input phrase itself
+                    catch(Exception IndexOutOfRangeException)
+                    {
+                        continue;
+                    }
                     
-                    nextWord = autoPhrase.Substring(phraseEnd);
                 }
                 // count occurance of each suggested next word/ letter
                 int letterCount;
