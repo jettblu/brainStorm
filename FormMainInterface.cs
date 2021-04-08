@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BrainStorm.EEG;
 using BrainStorm.Graphics;
 using BrainStorm.nlp;
 
@@ -19,6 +20,7 @@ namespace BrainStorm
         public Shape TestShape { get; set; }
         public Timer TrainTimer { get; set; }
         public int TrainTimerCount = 0;
+        public bool RecordEEG = true;
         public BrainStorm0()
         {
             InitializeComponent();
@@ -151,6 +153,16 @@ namespace BrainStorm
             TrainTimer.Tick += new EventHandler(createTestingInstance);
             TrainTimer.Start();
             TrainTimer.Interval = 3000;
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            EEGLogger.startLog();
+        }
+
+        private void btnStopRecord_Click(object sender, EventArgs e)
+        {
+            EEGLogger.KeepRecording = false;
         }
     }
 }

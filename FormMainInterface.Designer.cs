@@ -52,6 +52,8 @@
             this.tboxPhrase = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnTrain = new System.Windows.Forms.Button();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.btnStopRecord = new System.Windows.Forms.Button();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -347,12 +349,36 @@
             this.btnTrain.UseVisualStyleBackColor = true;
             this.btnTrain.Click += new System.EventHandler(this.btnTrain_Click);
             // 
+            // btnConnect
+            // 
+            this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnConnect.Location = new System.Drawing.Point(137, 712);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(119, 40);
+            this.btnConnect.TabIndex = 19;
+            this.btnConnect.Text = "Connect";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // btnStopRecord
+            // 
+            this.btnStopRecord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnStopRecord.Location = new System.Drawing.Point(262, 712);
+            this.btnStopRecord.Name = "btnStopRecord";
+            this.btnStopRecord.Size = new System.Drawing.Size(119, 40);
+            this.btnStopRecord.TabIndex = 20;
+            this.btnStopRecord.Text = "Stop Record";
+            this.btnStopRecord.UseVisualStyleBackColor = true;
+            this.btnStopRecord.Click += new System.EventHandler(this.btnStopRecord_Click);
+            // 
             // BrainStorm0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1318, 764);
+            this.Controls.Add(this.btnStopRecord);
+            this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.btnTrain);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.tboxPhrase);
@@ -409,6 +435,8 @@
         private System.Windows.Forms.TextBox tboxPhrase;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnTrain;
+        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.Button btnStopRecord;
     }
 }
 
