@@ -24,7 +24,7 @@ namespace BrainStorm.EEG
         
             OutFileStream = new FileStream(OutFilePath, FileMode.Append, FileAccess.Write);
             
-            DataStreamExample dse = new DataStreamExample();
+            DataStream dse = new DataStream();
             dse.AddStreams("pow");
             dse.OnSubscribed += SubscribedOK;
             dse.OnBandPowerDataReceived += OnBandPowerOK;

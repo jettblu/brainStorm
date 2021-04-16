@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BrainStorm.CortexAccess
 {
-    public class DataStreamExample
+    public class DataStream
     {
         private CortexClient _ctxClient;
         private List<string> _streams;
@@ -47,7 +47,7 @@ namespace BrainStorm.CortexAccess
         public event EventHandler<Dictionary<string, JArray>> OnSubscribed;
 
         // Constructor
-        public DataStreamExample()
+        public DataStream()
         {
 
             _authorizer = new Authorizer();

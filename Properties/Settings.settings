@@ -1,7 +1,9 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BrainStorm.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BasePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\\Users\\jett2\\Downloads\\carnegie mellon\\research\\surg fall 2020\\brainStorm\\BrainStorm C#\\BrainStorm\\sessions\\</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

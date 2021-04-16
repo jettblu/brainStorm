@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="CortexAccess\Authorizer.cs" />
     <Compile Include="CortexAccess\CtxClient.cs" />
-    <Compile Include="CortexAccess\DataStreamExample.cs" />
+    <Compile Include="CortexAccess\DataStream.cs" />
     <Compile Include="CortexAccess\Headset.cs" />
     <Compile Include="CortexAccess\HeadsetFinder.cs" />
     <Compile Include="CortexAccess\Record.cs" />
@@ -90,7 +90,10 @@
     <Compile Include="CortexAccess\Utils.cs" />
     <Compile Include="EEG\BandPowerLogger.cs" />
     <Compile Include="CortexAccess\Config.cs" />
+    <Compile Include="EEG\EEGData.cs" />
     <Compile Include="EEG\EEGLogger.cs" />
+    <Compile Include="EEG\Electrode.cs" />
+    <Compile Include="EEG\SignalProcessor.cs" />
     <Compile Include="FormMainInterface.cs">
       <SubType>Form</SubType>
     </Compile>

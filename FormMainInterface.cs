@@ -164,5 +164,15 @@ namespace BrainStorm
         {
             EEGLogger.KeepRecording = false;
         }
+
+
+        public void HandleResponse(string EEGMessage, int threadID)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string, int>(HandleResponse), EEGMessage, threadID);
+                return;
+            }
+        }
     }
 }
