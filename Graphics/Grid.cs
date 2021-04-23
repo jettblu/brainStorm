@@ -81,6 +81,16 @@ namespace BrainStorm.Graphics
             AllShapes = new List<Shape>();
             G.Clear(Color.Black);
             DrawLines();
+            try
+            {
+                BrainStorm0.TrainTimer.Stop();
+                BrainStorm0.TrainTimer.Dispose();
+                BrainStorm0.TrainTimerCount = 0;
+            }
+            catch
+            {
+                Console.WriteLine("Did not clear train timer.");
+            }
         }
         // redraw grid
         public void RedrawGrid()

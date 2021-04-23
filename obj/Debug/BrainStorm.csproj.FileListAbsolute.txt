@@ -32,3 +32,6 @@ C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\Brai
 C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\bin\Debug\Newtonsoft.Json.xml
 C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.csproj.CopyComplete
 C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.csprojAssemblyReference.cache
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\obj\Debug\BrainStorm.Graphics.Shape.resources
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\bin\Debug\MathNet.Numerics.dll
+C:\Users\jett2\Downloads\carnegie mellon\research\surg fall 2020\brainStorm\BrainStorm C#\BrainStorm\bin\Debug\MathNet.Numerics.xml

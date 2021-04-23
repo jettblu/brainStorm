@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
+using BrainStorm.CortexAccess;
 using Newtonsoft.Json.Linq;
 
 namespace BrainStorm.EEG
 {
     class SignalProcessor
     {
+        public const int SamplingRate = 180;
+        // nulls to insert into empty data cells for output file
+        private const string OffsetNulls = "null/null/null/null/null/null";
         // number of electrodes on EPOC X
         private const int NumberElectrodes = 14;
         // additional calculations
@@ -20,22 +26,26 @@ namespace BrainStorm.EEG
         public static int BandPowerNullsOffset { get; set; }
         // offset for band nulls
         public static int EEGNullsOffset { get; set; }
-        // output file stream
+        // output file streams... all data & train data
         public static FileStream OutFileStream { get; set; }
-        public static StreamWriter Fw { get; set; }
+        public static FileStream TrainFileStream { get; set; }
+        public static StreamWriter FwAll { get; set; }
         public static Dictionary<string, Electrode> Electrodes = new Dictionary<string, Electrode>();
         // electrodes on epoch x headset
         public static List<string> ElectrodeNames = "AF3,F7,F3,FC5,T7,P7,O1,O2,P8,T8,FC6,F4,F8,AF4".Split(',').ToList();
         // freq. band names
         public static List<string> FreqBandNames { get; set; }
-
+   
+ 
 
 
         // establishes csv header. Assumes eeg is added to data stream before band power.
-        public static void setHeader(object sender, Dictionary<string, JArray> e)
+        public static void SetHeaderAll(object sender, Dictionary<string, JArray> e)
         {
             CreateElectrodes();
-            Fw = new StreamWriter(OutFileStream);
+            // initialize file stream writers
+            FwAll = new StreamWriter(OutFileStream);
+
             ArrayList header = new ArrayList();
             foreach (string key in e.Keys)
             {
@@ -59,6 +69,19 @@ namespace BrainStorm.EEG
             WriteDataToFile(header, isHeader: true);
         }
 
+        public static void SetClassificationIndices()
+        {
+            var currIndex = 0;
+            foreach (var bandName in FreqBandNames)
+            {
+                // add electrode index to classification indices if specified
+                if (Classification.ClassificationElectrodes.Any(electrodeName => bandName.StartsWith(electrodeName)))
+                {
+                    Classification.ClassificationElectrodesIndices.Add(currIndex);
+                }
+                currIndex += 1;
+            }
+        }
         // create electrode instance for each electrode name in list
         private static void CreateElectrodes()
         {
@@ -73,13 +96,14 @@ namespace BrainStorm.EEG
         {
             //don't add nulls if writing header
             if (!isHeader)
-            {
+            {   
+                //CollectEEGSample(data);
                 // add nulls for raw eeg values
                 if (needsOffset)
                 {
                     for (int i = 0; i < BandPowerNullsOffset + 1; i++)
                     {
-                        data.Insert(i, "null/null/null/null/null/null");
+                        data.Insert(i, OffsetNulls);
                     }
                 }
                 // add nulls for band values
@@ -87,34 +111,50 @@ namespace BrainStorm.EEG
                 {
                     for (int i = 0; i < EEGNullsOffset; i++)
                     {
-                        data.Insert(BandPowerNullsOffset + i + 1, "null/null/null/null/null/null");
+                        data.Insert(BandPowerNullsOffset + i + 1, OffsetNulls);
                     }
                 }
             }
             var writeData = string.Join(" ,", data.ToArray());
-            Fw.WriteLine(writeData);
+            FwAll.WriteLine(writeData);
         }
 
+        // grab data points that we want to use for training
+        private static void CollectEEGSample(ArrayList data)
+        {   
+            // only add sample that is pure and includes both frequency and band power
+            if (Classification.IsRunning && Classification.IsPure && !data.Contains(OffsetNulls))
+            {
+                // exclude metadata attached to RawEEG
+
+               
+            }
+        }
 
         public static void OnEEGDataReceived(object sender, ArrayList eegData)
         {
-            EEGPeakDetection(eegData);
+            var trainingFreq = HandleClassificationEEG();
+            EEGPeakDetection(eegData, trainingFreq);
             WriteDataToFile(eegData);
         }
 
         // event handler for freq. band data being recieved
         public static void OnBandPowerRecieved(object sender, ArrayList bandData)
         {
-            BandPeakDetection(bandData);
+            var trainingFreq = HandleClassificationBand(bandData);
+            BandPeakDetection(bandData, trainingFreq);
             WriteDataToFile(bandData, needsOffset: true);
         }
 
 
-        public static void EEGPeakDetection(ArrayList eegData)
+        public static void EEGPeakDetection(ArrayList eegData, string trainingFreq)
         {
             //copy current data feed so loop isn't messed up when adding calculations to eegData
             var loopEEGData = eegData;
+            //vote count for blink decisions
             var voteCount = 0;
+           
+
             for (int i = 0; i < NumberElectrodes; i++)
             {
                 var currElectrode = GetElectrodeByName(ElectrodeNames[i]);
@@ -140,11 +180,11 @@ namespace BrainStorm.EEG
                 // add current electrode's moving standard dev. to file output. Mark preload w/ 0.
                 if (Electrode.IsEEGPreLoad)
                 {
-                    dataChunk += $"/null/{dataHasPeak}/null/null/null";
+                    dataChunk += $"/null/{dataHasPeak}/null/null/null/{trainingFreq}";
                 }
                 else
                 {
-                    dataChunk += $"/{stdDev}/{dataHasPeak}/{currElectrode.EEGRaw.MovingAvg}/{currElectrode.EEGRaw.UpperBound}/{currElectrode.EEGRaw.LowerBound}";
+                    dataChunk += $"/{stdDev}/{dataHasPeak}/{currElectrode.EEGRaw.MovingAvg}/{currElectrode.EEGRaw.UpperBound}/{currElectrode.EEGRaw.LowerBound}/{trainingFreq}";
                 }
                 eegData[dataIndex] = dataChunk;
             }
@@ -155,10 +195,65 @@ namespace BrainStorm.EEG
             }
         }
 
-        public static void BandPeakDetection(ArrayList bandData)
+
+        public static string HandleClassificationEEG()
         {
+            var trainingFreq = "null";
+
+            if (Classification.IsRunning)
+            {
+                // increment eegDataCount
+                Classification.EEGDataCount += 1;
+                // add label to data if training and pure
+                if (Classification.IsPure && Classification.IsTraining)
+                {
+                    trainingFreq = $"{BrainStorm0.ClassificationShape.Hertz}";
+                }
+            }
+            return trainingFreq;
+        }
+
+        public static string HandleClassificationBand(ArrayList bandData)
+        {
+            List<double> currPredictorPoints = new List<double>();
+            var trainingFreq = "null";
+            // add label to data if training and pure
+            if (Classification.IsRunning && Classification.IsPure)
+            {
+
+                //exclude first element of band data
+                for (int i = 1; i < bandData.Count; i++)
+                {
+                    currPredictorPoints.Add(Convert.ToDouble(bandData[i]));
+                }
+
+                // update classification parameters depending on whther training or predicting
+                if (Classification.IsTraining)
+                {
+                    trainingFreq = $"{BrainStorm0.ClassificationShape.Hertz}";
+                    // add current data sample
+                    Trainer.PredictorPointsTrain.Add(currPredictorPoints.ToArray());
+                    // add current frequency as label for above sample
+                    Trainer.FrequencyLabels.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
+                }
+                if (Classification.IsValidation)
+                {   
+                    currPredictorPoints = Classification.FilterBands(currPredictorPoints);
+                    Predictor.CurrPredictionPoints = currPredictorPoints.ToArray();
+                    Predictor.MakePrediction();
+                }
+
+                Classification.NumSamples += 1;
+            }
+            return trainingFreq;
+        }
+
+        public static void BandPeakDetection(ArrayList bandData, string trainingFreq)
+        {
+            
             bandData.RemoveAt(0);
             var voteCount = 0;
+            
             for (int i = 0; i < FreqBandNames.Count; i++)
             {
                 // band data header is output in the following format: (electrode name)/(band type)
@@ -189,12 +284,12 @@ namespace BrainStorm.EEG
                 // add current electrode's moving standard dev. to file output. Mark preload w/ -1.
                 if (Electrode.IsBandPreload)
                 {
-                    dataChunk += $"/null/{dataHasPeak}/null/null/null";
+                    dataChunk += $"/null/{dataHasPeak}/null/null/null/{trainingFreq}";
                     bandData[i] = dataChunk;
                 }
                 else
                 {
-                    dataChunk += $"/{stdDev}/{dataHasPeak}/{currBand.MovingAvg}/{currBand.UpperBound}/{currBand.LowerBound}";
+                    dataChunk += $"/{stdDev}/{dataHasPeak}/{currBand.MovingAvg}/{currBand.UpperBound}/{currBand.LowerBound}/{trainingFreq}";
                     bandData[i] = dataChunk;
                 }
 
@@ -234,9 +329,7 @@ namespace BrainStorm.EEG
             }
             // if band matches none of the above types
             return null;
-
         }
-
     }
 }
 

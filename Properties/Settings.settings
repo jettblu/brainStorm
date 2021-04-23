@@ -5,5 +5,8 @@
     <Setting Name="BasePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\\Users\\jett2\\Downloads\\carnegie mellon\\research\\surg fall 2020\\brainStorm\\BrainStorm C#\\BrainStorm\\sessions\\</Value>
     </Setting>
+    <Setting Name="EmailPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">!!242prank1sonyou</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

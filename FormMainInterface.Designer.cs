@@ -54,6 +54,11 @@
             this.btnTrain = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnStopRecord = new System.Windows.Forms.Button();
+            this.tboxPrediction = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.btnValidate = new System.Windows.Forms.Button();
+            this.btnSendEmail = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -341,7 +346,7 @@
             // btnTrain
             // 
             this.btnTrain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnTrain.Location = new System.Drawing.Point(137, 667);
+            this.btnTrain.Location = new System.Drawing.Point(262, 667);
             this.btnTrain.Name = "btnTrain";
             this.btnTrain.Size = new System.Drawing.Size(119, 40);
             this.btnTrain.TabIndex = 18;
@@ -352,7 +357,7 @@
             // btnConnect
             // 
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnConnect.Location = new System.Drawing.Point(137, 712);
+            this.btnConnect.Location = new System.Drawing.Point(137, 667);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(119, 40);
             this.btnConnect.TabIndex = 19;
@@ -363,7 +368,8 @@
             // btnStopRecord
             // 
             this.btnStopRecord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStopRecord.Location = new System.Drawing.Point(262, 712);
+            this.btnStopRecord.Enabled = false;
+            this.btnStopRecord.Location = new System.Drawing.Point(137, 712);
             this.btnStopRecord.Name = "btnStopRecord";
             this.btnStopRecord.Size = new System.Drawing.Size(119, 40);
             this.btnStopRecord.TabIndex = 20;
@@ -371,12 +377,70 @@
             this.btnStopRecord.UseVisualStyleBackColor = true;
             this.btnStopRecord.Click += new System.EventHandler(this.btnStopRecord_Click);
             // 
+            // tboxPrediction
+            // 
+            this.tboxPrediction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tboxPrediction.Location = new System.Drawing.Point(672, 635);
+            this.tboxPrediction.Name = "tboxPrediction";
+            this.tboxPrediction.Size = new System.Drawing.Size(112, 26);
+            this.tboxPrediction.TabIndex = 21;
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.SystemColors.Info;
+            this.label8.Location = new System.Drawing.Point(507, 635);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(159, 20);
+            this.label8.TabIndex = 22;
+            this.label8.Text = "Predicted Frequency:";
+            // 
+            // btnValidate
+            // 
+            this.btnValidate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnValidate.Enabled = false;
+            this.btnValidate.Location = new System.Drawing.Point(262, 712);
+            this.btnValidate.Name = "btnValidate";
+            this.btnValidate.Size = new System.Drawing.Size(119, 40);
+            this.btnValidate.TabIndex = 23;
+            this.btnValidate.Text = "Validate";
+            this.btnValidate.UseVisualStyleBackColor = true;
+            this.btnValidate.Click += new System.EventHandler(this.btnValidate_Click);
+            // 
+            // btnSendEmail
+            // 
+            this.btnSendEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSendEmail.Location = new System.Drawing.Point(672, 667);
+            this.btnSendEmail.Name = "btnSendEmail";
+            this.btnSendEmail.Size = new System.Drawing.Size(119, 40);
+            this.btnSendEmail.TabIndex = 24;
+            this.btnSendEmail.Text = "Send Email";
+            this.btnSendEmail.UseVisualStyleBackColor = true;
+            this.btnSendEmail.Click += new System.EventHandler(this.btnSendEmail_Click);
+            // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.SystemColors.Info;
+            this.label9.Location = new System.Drawing.Point(598, 667);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(68, 20);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "Delivery:";
+            // 
             // BrainStorm0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1318, 764);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.btnSendEmail);
+            this.Controls.Add(this.btnValidate);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.tboxPrediction);
             this.Controls.Add(this.btnStopRecord);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.btnTrain);
@@ -437,6 +501,11 @@
         private System.Windows.Forms.Button btnTrain;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnStopRecord;
+        private System.Windows.Forms.TextBox tboxPrediction;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnValidate;
+        private System.Windows.Forms.Button btnSendEmail;
+        private System.Windows.Forms.Label label9;
     }
 }
 

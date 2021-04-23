@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using BrainStorm.EEG;
 using Timer = System.Windows.Forms.Timer;
 
 
@@ -21,7 +22,7 @@ namespace BrainStorm.Graphics
 
         public int VertPadding { get; set; }
 
-    public int Row { get; set; }
+        public int Row { get; set; }
         public int Col { get; set; }
         public bool Fill { get; set; }
         // flashing properties
@@ -30,6 +31,7 @@ namespace BrainStorm.Graphics
         private int _hertz;
         public int Count {get; set;}
         public Timer FlashTimer { get; set; }
+        public bool FrequencyUpdated = true;
         public int Hertz
         {
             get => _hertz;
@@ -54,7 +56,7 @@ namespace BrainStorm.Graphics
                {
                    if (FlashTimer != null)
                    { 
-                    // if shape is flashing stop it
+                      // if shape is flashing stop it
                       FlashTimer.Stop();
                       FlashTimer.Enabled = false; 
                    }
@@ -124,6 +126,7 @@ namespace BrainStorm.Graphics
         public void Flash(Object thisShape,
             EventArgs myEventArgs)
         {
+            Console.WriteLine($"HERTZ: {Hertz}");
             Count++;
             if (IsDisplayed)
             {
@@ -136,6 +139,12 @@ namespace BrainStorm.Graphics
                 DrawString(Text, B);
             }
             IsDisplayed = !IsDisplayed;
+            if (Classification.CurrFrequency != Hertz && Classification.IsRunning)
+            {
+                Hertz = Classification.CurrFrequency;
+                // indicate frequency has been updated
+                FrequencyUpdated = true;
+            }
         }
 
         public void DrawCircle()
