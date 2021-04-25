@@ -25,6 +25,8 @@ namespace BrainStorm.EEG
         public static bool IsPure = false;
         public static int CurrFrequency = 2;
         public static int _eegDataCount = 0;
+        // toggle for classification and regression displays
+        public static bool IsClassifier = true;
         // electrodes classification will extract features from
         public static List<string> ClassificationElectrodes = new List<string>() {"AF3", "F7", "F3", "F4", "F8", "AF4"};
         public static List<int> ClassificationElectrodesIndices = new List<int>();
@@ -54,7 +56,15 @@ namespace BrainStorm.EEG
                 if (NumSamples == SamplesToCollect)
                 {
                     NumUniqueFrequencyLabels += 1;
-                    DisplayNewFrequencyRegression();
+                    if (IsClassifier)
+                    {
+                        DisplayNewFrequencyClassification();
+                    }
+                    else
+                    {
+                        DisplayNewFrequencyRegression();
+                    }
+                    
                     _eegDataCount = 0;
                     NumSamples = 0;
                     IsPure = false;
