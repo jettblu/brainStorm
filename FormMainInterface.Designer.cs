@@ -54,11 +54,15 @@
             this.btnTrain = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnStopRecord = new System.Windows.Forms.Button();
-            this.tboxPrediction = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.btnValidate = new System.Windows.Forms.Button();
             this.btnSendEmail = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
+            this.cBoxClassification = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.btnLoadFile = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.BackTestSelector = new System.Windows.Forms.OpenFileDialog();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -289,9 +293,9 @@
             this.gboxControls.Controls.Add(this.pboxUndo);
             this.gboxControls.Controls.Add(this.pboxClear);
             this.gboxControls.ForeColor = System.Drawing.SystemColors.Info;
-            this.gboxControls.Location = new System.Drawing.Point(833, 625);
+            this.gboxControls.Location = new System.Drawing.Point(837, 625);
             this.gboxControls.Name = "gboxControls";
-            this.gboxControls.Size = new System.Drawing.Size(473, 138);
+            this.gboxControls.Size = new System.Drawing.Size(469, 138);
             this.gboxControls.TabIndex = 16;
             this.gboxControls.TabStop = false;
             this.gboxControls.Text = "Controls";
@@ -307,6 +311,9 @@
             // 
             // pboxClear
             // 
+            this.pboxClear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pboxClear.Location = new System.Drawing.Point(106, 15);
             this.pboxClear.Name = "pboxClear";
             this.pboxClear.Size = new System.Drawing.Size(168, 112);
@@ -377,14 +384,6 @@
             this.btnStopRecord.UseVisualStyleBackColor = true;
             this.btnStopRecord.Click += new System.EventHandler(this.btnStopRecord_Click);
             // 
-            // tboxPrediction
-            // 
-            this.tboxPrediction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tboxPrediction.Location = new System.Drawing.Point(672, 635);
-            this.tboxPrediction.Name = "tboxPrediction";
-            this.tboxPrediction.Size = new System.Drawing.Size(112, 26);
-            this.tboxPrediction.TabIndex = 21;
-            // 
             // label8
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -392,9 +391,8 @@
             this.label8.ForeColor = System.Drawing.SystemColors.Info;
             this.label8.Location = new System.Drawing.Point(507, 635);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(159, 20);
+            this.label8.Size = new System.Drawing.Size(0, 20);
             this.label8.TabIndex = 22;
-            this.label8.Text = "Predicted Frequency:";
             // 
             // btnValidate
             // 
@@ -411,12 +409,13 @@
             // btnSendEmail
             // 
             this.btnSendEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSendEmail.Location = new System.Drawing.Point(672, 667);
+            this.btnSendEmail.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.btnSendEmail.Location = new System.Drawing.Point(670, 712);
             this.btnSendEmail.Name = "btnSendEmail";
             this.btnSendEmail.Size = new System.Drawing.Size(119, 40);
             this.btnSendEmail.TabIndex = 24;
             this.btnSendEmail.Text = "Send Email";
-            this.btnSendEmail.UseVisualStyleBackColor = true;
+            this.btnSendEmail.UseVisualStyleBackColor = false;
             this.btnSendEmail.Click += new System.EventHandler(this.btnSendEmail_Click);
             // 
             // label9
@@ -424,11 +423,61 @@
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.Info;
-            this.label9.Location = new System.Drawing.Point(598, 667);
+            this.label9.Location = new System.Drawing.Point(596, 723);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(68, 20);
             this.label9.TabIndex = 25;
             this.label9.Text = "Delivery:";
+            // 
+            // cBoxClassification
+            // 
+            this.cBoxClassification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cBoxClassification.AutoSize = true;
+            this.cBoxClassification.Location = new System.Drawing.Point(668, 640);
+            this.cBoxClassification.Name = "cBoxClassification";
+            this.cBoxClassification.Size = new System.Drawing.Size(113, 24);
+            this.cBoxClassification.TabIndex = 26;
+            this.cBoxClassification.Text = "checkBox1";
+            this.cBoxClassification.UseVisualStyleBackColor = true;
+            this.cBoxClassification.CheckedChanged += new System.EventHandler(this.cBoxClassification_CheckedChanged);
+            // 
+            // label10
+            // 
+            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.SystemColors.Info;
+            this.label10.Location = new System.Drawing.Point(541, 641);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(123, 20);
+            this.label10.TabIndex = 27;
+            this.label10.Text = "Is Classification:";
+            // 
+            // btnLoadFile
+            // 
+            this.btnLoadFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnLoadFile.Location = new System.Drawing.Point(670, 666);
+            this.btnLoadFile.Name = "btnLoadFile";
+            this.btnLoadFile.Size = new System.Drawing.Size(119, 40);
+            this.btnLoadFile.TabIndex = 28;
+            this.btnLoadFile.Text = "Back Test";
+            this.btnLoadFile.UseVisualStyleBackColor = true;
+            this.btnLoadFile.Click += new System.EventHandler(this.btnLoadFile_Click);
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.SystemColors.Info;
+            this.label11.Location = new System.Drawing.Point(596, 677);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(65, 20);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "Testing:";
+            // 
+            // BackTestSelector
+            // 
+            this.BackTestSelector.FileName = "openFileDialog1";
+            this.BackTestSelector.Filter = "CSV|*.csv";
             // 
             // BrainStorm0
             // 
@@ -436,11 +485,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1318, 764);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.btnLoadFile);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.cBoxClassification);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.btnSendEmail);
             this.Controls.Add(this.btnValidate);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.tboxPrediction);
             this.Controls.Add(this.btnStopRecord);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.btnTrain);
@@ -501,11 +553,15 @@
         private System.Windows.Forms.Button btnTrain;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnStopRecord;
-        private System.Windows.Forms.TextBox tboxPrediction;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnValidate;
         private System.Windows.Forms.Button btnSendEmail;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox cBoxClassification;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button btnLoadFile;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.OpenFileDialog BackTestSelector;
     }
 }
 

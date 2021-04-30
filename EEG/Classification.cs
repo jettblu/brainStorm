@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BrainStorm.BackTesting;
 using BrainStorm.CortexAccess;
 using BrainStorm.Graphics;
 
@@ -26,7 +27,7 @@ namespace BrainStorm.EEG
         public static int CurrFrequency = 2;
         public static int _eegDataCount = 0;
         // toggle for classification and regression displays
-        public static bool IsClassifier = true;
+        public static bool IsClassifier = false;
         // electrodes classification will extract features from
         public static List<string> ClassificationElectrodes = new List<string>() {"AF3", "F7", "F3", "F4", "F8", "AF4"};
         public static List<int> ClassificationElectrodesIndices = new List<int>();
@@ -131,11 +132,19 @@ namespace BrainStorm.EEG
 
         public static void DisplayNewFrequencyRegression()
         {
+            if (SignalProcessor.IsBackTest)
+            {
+                CurrFrequency = BackTest.ClassificationFrequency;
+            }
+            else
+            {
+                Random rnd = new Random();
+                CurrFrequency = rnd.Next(3, 40);
+            }
+            
 
-            Random rnd = new Random();
-            var freq = rnd.Next(3, 40);
-            CurrFrequency = freq;
-            if (IsTraining)
+            // uncomment to write frequency label to console
+           /* if (IsTraining)
             {   
                 Console.WriteLine($"Training Frequency: {CurrFrequency}");
             }
@@ -143,8 +152,9 @@ namespace BrainStorm.EEG
             {
                 Console.WriteLine($"Predictor Frequency: {CurrFrequency}");
                
-            }
-            BrainStorm0.ClassificationShape.Text = freq.ToString();
+            }*/
+
+            BrainStorm0.ClassificationShape.Text = CurrFrequency.ToString();
             BrainStorm0.ClassificationShape.FrequencyUpdated = false;
 
 
@@ -158,18 +168,19 @@ namespace BrainStorm.EEG
             var freq = FrequencyClasses[rnd.Next(FrequencyClasses.Count)];
             CurrFrequency = freq;
 
-            if (IsTraining)
-            {
-                Console.WriteLine($"Training Frequency: {CurrFrequency}");
-            }
+            // uncomment to write frequency label to console
+            /*   if (IsTraining)
+               {
+                   Console.WriteLine($"Training Frequency: {CurrFrequency}");
+               }
 
-            if (IsValidation)
-            {
-                Console.WriteLine($"Predictor Frequency: {CurrFrequency}");
+               if (IsValidation)
+               {
+                   Console.WriteLine($"Predictor Frequency: {CurrFrequency}");
 
-            }
+               }*/
+
             BrainStorm0.ClassificationShape.Text = freq.ToString();
-            BrainStorm0.ClassificationShape.FrequencyUpdated = false;
         }
 
         // filter data, so we only recieve data from bands/ nodes we care about

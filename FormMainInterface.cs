@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using BrainStorm.BackTesting;
 using BrainStorm.CortexAccess;
 using BrainStorm.EEG;
 using BrainStorm.Graphics;
@@ -23,9 +18,10 @@ namespace BrainStorm
         public static Shape ClassificationShape { get; set; }
         public static Timer TrainTimer { get; set; }
         public static Timer PurityTimer { get; set; }
-        public static  int TrainTimerCount = 0;
+        public static  int TrainTimerCount;
         public static int TrainSampleSize = 5;
         public static bool RecordEEG = true;
+        public static BackTest BackTest { get; set; }
         public static Thread FormThread { get; set; }
         public BrainStorm0()
         {
@@ -209,6 +205,24 @@ namespace BrainStorm
         private void btnSendEmail_Click(object sender, EventArgs e)
         {
             Utils.SendEmail("This Came from a Mind Controlled Keyboard!!", tboxPhrase.Text);
+        }
+
+        private void cBoxClassification_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Classification.IsRunning) return;
+            Classification.IsClassifier = cBoxClassification.Checked;
+        }
+
+        private void btnLoadFile_Click(object sender, EventArgs e)
+        {   
+            
+            if (BackTestSelector.ShowDialog() != DialogResult.OK) return;
+            var BackTest = new BackTest();
+            SignalProcessor.IsBackTest = true;
+            // attach event handlers for back test
+            BackTest.OnBackTestBandDataRecieved += SignalProcessor.OnEEGDataReceived;
+            BackTest.OnBackTestEEGDataRecieved += SignalProcessor.OnBandPowerRecieved;
+            BackTest.HandleRecords(BackTestSelector.OpenFile());
         }
     }
 }

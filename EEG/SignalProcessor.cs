@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using BrainStorm.CortexAccess;
+using BrainStorm.MLHelper;
 using Newtonsoft.Json.Linq;
 
 namespace BrainStorm.EEG
@@ -35,6 +36,10 @@ namespace BrainStorm.EEG
         public static List<string> ElectrodeNames = "AF3,F7,F3,FC5,T7,P7,O1,O2,P8,T8,FC6,F4,F8,AF4".Split(',').ToList();
         // freq. band names
         public static List<string> FreqBandNames { get; set; }
+        // # of electrodes needed to fire for event to be considered an artifact... hardcoded
+        public const int ArtifactThresholdEEG = 3;
+        public static ArtifiactCurator ArtifactManager = new ArtifiactCurator();
+        public static bool IsBackTest = false;
    
  
 
@@ -60,6 +65,7 @@ namespace BrainStorm.EEG
                     // set names for each power band
                     FreqBandNames = e[key].ToObject<ArrayList>().Cast<string>().ToList();
                     EEGNullsOffset = e[key].Count;
+                    SetClassificationIndices();
                 }
                 header.AddRange(e[key].ToObject<ArrayList>());
             }
@@ -75,7 +81,7 @@ namespace BrainStorm.EEG
             foreach (var bandName in FreqBandNames)
             {
                 // add electrode index to classification indices if specified
-                if (Classification.ClassificationElectrodes.Any(electrodeName => bandName.StartsWith(electrodeName)))
+                if (Classification.ClassificationElectrodes.Any(electrodeName => bandName.Contains(electrodeName)))
                 {
                     Classification.ClassificationElectrodesIndices.Add(currIndex);
                 }
@@ -135,6 +141,8 @@ namespace BrainStorm.EEG
         {
             var trainingFreq = HandleClassificationEEG();
             EEGPeakDetection(eegData, trainingFreq);
+            // don't write data to file if running historical data
+            if (IsBackTest) return;
             WriteDataToFile(eegData);
         }
 
@@ -143,6 +151,8 @@ namespace BrainStorm.EEG
         {
             var trainingFreq = HandleClassificationBand(bandData);
             BandPeakDetection(bandData, trainingFreq);
+            // don't write data to file if running historical data
+            if (IsBackTest) return;
             WriteDataToFile(bandData, needsOffset: true);
         }
 
@@ -168,13 +178,10 @@ namespace BrainStorm.EEG
                 if (Electrode.hasPeak(currElectrode.EEGRaw, Convert.ToDouble(loopEEGData[dataIndex])))
                 {
                     dataHasPeak = "true";
-                    //discard peaks from baseline electrodes
-                    if (currElectrode.Name != " T7" && currElectrode.Name != " T8")
-                    {
-                        voteCount += 1;
-                        Console.WriteLine(ElectrodeNames[i]);
-                        Console.WriteLine("!!!");
-                    }
+                    voteCount += 1;
+                    // uncomment to indicate which electrode fired
+                   /* Console.WriteLine(ElectrodeNames[i]);
+                    Console.WriteLine("!!!");*/
                 }
 
                 // add current electrode's moving standard dev. to file output. Mark preload w/ 0.
@@ -188,10 +195,12 @@ namespace BrainStorm.EEG
                 }
                 eegData[dataIndex] = dataChunk;
             }
-            if (voteCount >= 3) Console.WriteLine("handle blink 98vi8jvh3jhvujhurhgv3hghgjhjkghr");
-            if (voteCount != 0)
+
+            // artifact detection
+            var isArtifact = ArtifactManager.IsArtifact(CurrPeak: voteCount >= ArtifactThresholdEEG);
+            if (isArtifact)
             {
-                Console.WriteLine(voteCount);
+                Console.WriteLine("--------- Artifact Detected -------------");
             }
         }
 
@@ -228,17 +237,17 @@ namespace BrainStorm.EEG
                 }
 
                 // update classification parameters depending on whther training or predicting
+                currPredictorPoints = Classification.FilterBands(currPredictorPoints);
                 if (Classification.IsTraining)
                 {
                     trainingFreq = $"{BrainStorm0.ClassificationShape.Hertz}";
                     // add current data sample
-                    Trainer.PredictorPointsTrain.Add(currPredictorPoints.ToArray());
+                    Trainer.PredictorPointsTrainRaw.Add(currPredictorPoints.ToArray());
                     // add current frequency as label for above sample
-                    Trainer.FrequencyLabels.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
+                    Trainer.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
                 }
                 if (Classification.IsValidation)
                 {   
-                    currPredictorPoints = Classification.FilterBands(currPredictorPoints);
                     Predictor.CurrPredictionPoints = currPredictorPoints.ToArray();
                     Predictor.MakePrediction();
                 }
@@ -269,15 +278,11 @@ namespace BrainStorm.EEG
 
                 if (Electrode.hasPeak(currBand, Convert.ToDouble(bandData[dataIndex]), isBand: true))
                 {
-                    dataHasPeak = "true";
-                    //discard peaks from baseline electrodes
-                    if (currElectrode.Name != " T7" && currElectrode.Name != " T8" && bandName == "theta")
-                    {
-
+                        dataHasPeak = "true";
                         voteCount += 1;
-                        Console.WriteLine(currElectrode.Name);
-                        Console.WriteLine("!!! BANDDD");
-                    }
+                    // uncoment to indicate which electrode band fired
+   /*                   Console.WriteLine(currElectrode.Name);
+                        Console.WriteLine("!!! BANDDD");*/
                 }
 
 
@@ -296,11 +301,7 @@ namespace BrainStorm.EEG
             }
 
 
-            if (voteCount >= 14) Console.WriteLine("handle blink BANDDDDDDDDDDDDDD");
-            if (voteCount != 0)
-            {
-                Console.WriteLine(voteCount);
-            }
+            if (voteCount >= 35) Console.WriteLine($"Hnadle Blink BAND: {voteCount} Votes");
         }
 
         // helper function that returns current electrode

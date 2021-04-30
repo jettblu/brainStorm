@@ -38,7 +38,7 @@ namespace BrainStorm.EEG
 
             // initialize filestreams for data recording
             SignalProcessor.OutFileStream = new FileStream(OutFilePath, FileMode.Append, FileAccess.Write);
-            SignalProcessor.TrainFileStream = new FileStream(TrainFilePath, FileMode.Append, FileAccess.Write);
+            /*SignalProcessor.TrainFileStream = new FileStream(TrainFilePath, FileMode.Append, FileAccess.Write);*/
 
 
             DataStream dse = new DataStream();

@@ -125,8 +125,9 @@ namespace BrainStorm.Graphics
         // This is the method to run when the timer is raised.
         public void Flash(Object thisShape,
             EventArgs myEventArgs)
-        {
-            Console.WriteLine($"HERTZ: {Hertz}");
+        {   
+            // uncomment below to write current Hertz to console
+            // Console.WriteLine($"HERTZ: {Hertz}");
             Count++;
             if (IsDisplayed)
             {

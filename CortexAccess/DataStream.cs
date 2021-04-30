@@ -41,7 +41,7 @@ namespace BrainStorm.CortexAccess
         // Event
         public event EventHandler<ArrayList> OnMotionDataReceived; // motion data
         public event EventHandler<ArrayList> OnEEGDataReceived; // eeg data
-        //public event EventHandler<ArrayList> OnDevDataReceived; // contact quality data
+        public event EventHandler<ArrayList> OnDevDataReceived; // contact quality data
         public event EventHandler<ArrayList> OnPerfDataReceived; // performance metric
         public event EventHandler<ArrayList> OnBandPowerDataReceived; // band power
         public event EventHandler<Dictionary<string, JArray>> OnSubscribed;
@@ -153,7 +153,7 @@ namespace BrainStorm.CortexAccess
 
         private void StreamDataReceived(object sender, StreamDataEventArgs e)
         {
-            Console.WriteLine(e.StreamName + " data received.");
+            // Console.WriteLine(e.StreamName + " data received.");
             ArrayList data = e.Data.ToObject<ArrayList>();
             // insert timestamp to datastream
             data.Insert(0, e.Time);
