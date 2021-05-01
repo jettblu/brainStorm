@@ -6,8 +6,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BrainStorm.EEG;
+using SuperSocket.ClientEngine;
+using Accord.Math;
 
 namespace BrainStorm.BackTesting
 {
@@ -16,7 +19,7 @@ namespace BrainStorm.BackTesting
         public event EventHandler<ArrayList> OnBackTestEEGDataRecieved; // back test eeg data
         public event EventHandler<ArrayList> OnBackTestBandDataRecieved; // back test band data
         public bool ClassificationHasStarted = false;
-        public const int FrequencyCSVIndex = 4;
+        public const int FrequencyCSVIndex = 6;
         public static int ClassificationFrequency;
         public void HandleRecords(Stream csvStream)
         {   
@@ -26,6 +29,7 @@ namespace BrainStorm.BackTesting
             {
                 csv.Read();
                 csv.ReadHeader();
+                SetProcessingMarkers(csv);
                 while (csv.Read())
                 {
                     bool isBand = csv.GetField("AF3 ").Split('/')[0].Contains("null");
@@ -33,15 +37,17 @@ namespace BrainStorm.BackTesting
                    
                     if (isBand)
                     {
+                        Console.WriteLine("Backtest: Band Data Recieved.");
                         if (!csv.GetField("AF3/theta ").Split('/')[FrequencyCSVIndex].Contains("null"))
                         {
                             if (!ClassificationHasStarted)
-                            {   
+                            {
+                                Classification.IsTraining = true;
                                 Classification.StartProcess();
                                 ClassificationHasStarted = true;
                             }
-                            ClassificationFrequency = Convert.ToInt32(csv.GetField("AF3/theta ").Split('/')[FrequencyCSVIndex].Trim());
-                            
+                            var freq = csv.GetField("AF3/theta ").Split('/')[FrequencyCSVIndex].Trim();
+                            ClassificationFrequency = Convert.ToInt32(freq);
                         }
                         
                         var bandsData = new BackTestBands
@@ -119,14 +125,15 @@ namespace BrainStorm.BackTesting
                             FC6Gamma = Convert.ToDouble(csv.GetField("FC6/gamma ").Split('/')[0]),
                             F4Gamma = Convert.ToDouble(csv.GetField("F4/gamma ").Split('/')[0]),
                             F8Gamma = Convert.ToDouble(csv.GetField("AF3/gamma ").Split('/')[0]),
-                            AF4Gamma = Convert.ToDouble(csv.GetField("AF4/gamma ").Split('/')[0]),
+                            AF4Gamma = Convert.ToDouble(csv.GetField("AF4/gamma").Split('/')[0]),
 
                         };
                         bandsData.CreateEventData();
                         OnBackTestBandDataRecieved(this, bandsData.RawData);
                     }
                     else
-                    {
+                    {   
+                        Console.WriteLine("Backtest: Raw EEG Data Recieved.");
                         if (!csv.GetField("AF3 ").Split('/')[FrequencyCSVIndex].Contains("null"))
                         {
                             if (!ClassificationHasStarted)
@@ -160,12 +167,25 @@ namespace BrainStorm.BackTesting
                         rawEEGData.CreateEventData();
                         OnBackTestEEGDataRecieved(this, rawEEGData.RawData);
                     }
-
-
+                    // add a delay (in ms) between eeg data events to simulate real data stream
+                    Thread.Sleep(1000 / SignalProcessor.SamplingRate);
                 }
             }
             // indicate back test is complete
             SignalProcessor.IsBackTest = false;
+        }
+
+        // normally done in setHeaderAll if not backtesting
+        public void SetProcessingMarkers(CsvReader csv)
+        {
+            int bandPowerStart = csv.HeaderRecord.IndexOf("AF3/theta ");
+            int bandPowersLength = csv.HeaderRecord.Length - bandPowerStart;
+            SignalProcessor.CreateElectrodes();
+            // length of raw eeg section
+            SignalProcessor.BandPowerNullsOffset = bandPowerStart -1;
+            SignalProcessor.EEGNullsOffset = bandPowersLength;
+            SignalProcessor.FreqBandNames = csv.HeaderRecord.ToList().GetRange(bandPowerStart, bandPowersLength);
+            SignalProcessor.SetClassificationIndices();
         }
     }
 }

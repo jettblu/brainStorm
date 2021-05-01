@@ -15,7 +15,7 @@ namespace BrainStorm.EEG
 {
     class SignalProcessor
     {
-        public const int SamplingRate = 180;
+        public const int SamplingRate = 128;
         // nulls to insert into empty data cells for output file
         private const string OffsetNulls = "null/null/null/null/null/null";
         // number of electrodes on EPOC X
@@ -89,7 +89,7 @@ namespace BrainStorm.EEG
             }
         }
         // create electrode instance for each electrode name in list
-        private static void CreateElectrodes()
+        public static void CreateElectrodes()
         {
             foreach (var name in ElectrodeNames)
             {
@@ -315,7 +315,7 @@ namespace BrainStorm.EEG
         public static EEGData GetBandByName(string bandName, Electrode currElectrode)
         {
             // grab relevant eeg data
-            switch (bandName)
+            switch (bandName.Trim())
             {
                 case "theta":
                     return currElectrode.Theta;

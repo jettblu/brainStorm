@@ -220,9 +220,17 @@ namespace BrainStorm
             var BackTest = new BackTest();
             SignalProcessor.IsBackTest = true;
             // attach event handlers for back test
-            BackTest.OnBackTestBandDataRecieved += SignalProcessor.OnEEGDataReceived;
-            BackTest.OnBackTestEEGDataRecieved += SignalProcessor.OnBandPowerRecieved;
-            BackTest.HandleRecords(BackTestSelector.OpenFile());
+            BackTest.OnBackTestBandDataRecieved += SignalProcessor.OnBandPowerRecieved;
+            BackTest.OnBackTestEEGDataRecieved += SignalProcessor.OnEEGDataReceived;
+            new Thread(() =>
+                {
+
+                    BackTest.HandleRecords(BackTestSelector.OpenFile());
+                    Utils.UserMessage("Backtesting Finished", messageType: Globals.MessageTypes.Status);
+
+                })
+                { IsBackground = true }.Start();
+            
         }
     }
 }
