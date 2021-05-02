@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Accord.MachineLearning;
+using Accord.Statistics.Analysis;
 using BrainStorm.BackTesting;
 using BrainStorm.CortexAccess;
 using BrainStorm.Graphics;
@@ -24,7 +26,7 @@ namespace BrainStorm.EEG
         public static bool RestartCount = false;
         public static bool IsRunning = false;
         public static bool IsPure = false;
-        public static int CurrFrequency = 2;
+        public static int CurrFrequency = 6;
         public static int _eegDataCount = 0;
         // toggle for classification and regression displays
         public static bool IsClassifier = false;
@@ -119,6 +121,7 @@ namespace BrainStorm.EEG
             if (IsValidation)
             {
                 Utils.UserMessage("Validation Complete.", messageType: Globals.MessageTypes.Status);
+                Validation.Validate();
             }
             BrainStorm0.ClassificationShape = null;
             CurrFrequency = 2;
@@ -193,5 +196,8 @@ namespace BrainStorm.EEG
             }
             return filteredBands;
         }
+
+
+
     }
 }

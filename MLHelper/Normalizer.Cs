@@ -8,6 +8,6 @@ namespace BrainStorm.MLHelper
 {
     class Normalizer
     {
-        public List<FeatureStandards> Standardization { get; set; }
+        public List<FeatureStandards> Standardization = new List<FeatureStandards>();
     }
 }

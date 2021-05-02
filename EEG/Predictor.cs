@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Accord.MachineLearning;
 using Accord.MachineLearning.DecisionTrees;
 using Accord.Statistics.Analysis;
+using Accord.Statistics.Models.Regression;
 using Accord.Statistics.Models.Regression.Linear;
 using BrainStorm.Graphics;
 using BrainStorm.MLHelper;
@@ -16,10 +17,12 @@ namespace BrainStorm.EEG
 {
     class Predictor:Classification
     {
-        // Linear Regression parameters for predictions
+        // Regression models
         public static MultipleLinearRegression MultipleGeneralRegression { get; set; }
-        // Classifier Models
-        public static KNearestNeighbors KNN = new KNearestNeighbors(4);
+        public static PolynomialRegression MultiplePolyRegression { get; set; }
+        public static MultinomialLogisticRegression MultinomialLogisticRegression { get; set; }
+        // Classification Models
+        public static MinimumMeanDistanceClassifier MinimumMeanDistance { get; set; }
 
         public static RandomForest RandomForest { get; set; }
         // data to use for frequency prediction
@@ -29,49 +32,94 @@ namespace BrainStorm.EEG
         public static double PredictedFrequencyGeneral { get; set; }
         public static int PredictedFrequencyClassifiers { get; set; }
         public static PrincipalComponentAnalysis PCA { get; set; }
-        public static Normalizer FeatureNormalizer {get; set; }
+        public static Normalizer FeatureNormalizer  = new Normalizer();
 
 
 
-        public static void MakePrediction()
+
+
+        public static void MakePrediction(bool normalize=false, bool usePca=false)
         {
-            StandardizePredictors();
+
+            if (normalize || usePca) StandardizePredictors();
             // use stored PCA analysis to transform standardized features
             // only use if features are normalized first
-            CurrPredictionPoints = PCA.Transform(CurrPredictionPoints);
+            if(usePca) CurrPredictionPoints = PCA.Transform(CurrPredictionPoints);
+
+
+
             if (Classification.IsClassifier)
             {
-                PredictedFrequencyClassifiers = KNN.Decide(CurrPredictionPoints);
-                Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} KNN Predicted Frequency: {PredictedFrequencyClassifiers}");
-                Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Random Forest Predicted Frequency: {RandomForest.Decide(CurrPredictionPoints)}");
+                Classify();
             }
             else
             {
-                PredictedFrequencyGeneral = MultipleGeneralRegression.Transform(CurrPredictionPoints);
-                Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} MGR Predicted Frequency: {PredictedFrequencyGeneral}");
+               Regression();
             }
         }
 
+
+
+
+        public static void Classify()
+        {
+            var lgrPred = -1;
+            var lgrProb = -1.0;
+            if (MultinomialLogisticRegression != null)
+            {
+                lgrPred = MultinomialLogisticRegression.Decide(CurrPredictionPoints);
+                lgrProb = MultinomialLogisticRegression.Probability(CurrPredictionPoints);
+                Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Logistic Regression Predicted Frequency: {lgrPred} Probability: {lgrProb}");
+            }
+
+            var mmdPred = -1;
+            var mmdScore = -1.0;
+            if (MinimumMeanDistance != null)
+            {
+                mmdPred = MinimumMeanDistance.Decide(CurrPredictionPoints);
+                mmdScore = MinimumMeanDistance.Score(CurrPredictionPoints);
+            }
+
+            var rfPred = -1;
+            if (RandomForest != null)
+            {
+                rfPred = RandomForest.Decide(CurrPredictionPoints);
+            }
+            PredictedFrequencyClassifiers = mmdPred;
+            Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} KNN Predicted Frequency: {PredictedFrequencyClassifiers}");
+            Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Random Forest Predicted Frequency: {RandomForest.Decide(CurrPredictionPoints)}");
+        }
+
+        public static void Regression()
+        {
+            if (MultipleGeneralRegression != null)
+            {
+                PredictedFrequencyGeneral = MultipleGeneralRegression.Transform(CurrPredictionPoints);
+                Console.WriteLine(
+                    $"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} MGR Predicted Frequency: {PredictedFrequencyGeneral}");
+            }
+            else
+            {
+                Console.WriteLine("Multiple General Regression is null.");
+            }
+        }
         public static void StandardizePredictors()
         {
             var currIndex = 0;
-            foreach (var value in CurrPredictionPoints)
+            for (int i = 0; i < CurrPredictionPoints.Length; i++)
             {
+                var value = CurrPredictionPoints[i];
+                
                 CurrPredictionPoints[currIndex] = (value - FeatureNormalizer.Standardization[currIndex].Mean) /
                                                   FeatureNormalizer.Standardization[currIndex].StandardDeviation;
+
                 currIndex += 1;
             }
+             
         }
 
 
-        public static void StopValidation()
-        {
-            _eegDataCount = 0;
-            NumSamples = 0;
-            IsPure = false;
-            BrainStorm0.MainGrid.ClearShapes();
-            IsRunning = false;
-        }
+
 
         
     }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
+using Accord.Math;
 using BrainStorm.CortexAccess;
 using BrainStorm.MLHelper;
 using Newtonsoft.Json.Linq;
@@ -37,7 +38,7 @@ namespace BrainStorm.EEG
         // freq. band names
         public static List<string> FreqBandNames { get; set; }
         // # of electrodes needed to fire for event to be considered an artifact... hardcoded
-        public const int ArtifactThresholdEEG = 3;
+        public const int ArtifactThresholdEEG = 7;
         public static ArtifiactCurator ArtifactManager = new ArtifiactCurator();
         public static bool IsBackTest = false;
    
@@ -125,17 +126,6 @@ namespace BrainStorm.EEG
             FwAll.WriteLine(writeData);
         }
 
-        // grab data points that we want to use for training
-        private static void CollectEEGSample(ArrayList data)
-        {   
-            // only add sample that is pure and includes both frequency and band power
-            if (Classification.IsRunning && Classification.IsPure && !data.Contains(OffsetNulls))
-            {
-                // exclude metadata attached to RawEEG
-
-               
-            }
-        }
 
         public static void OnEEGDataReceived(object sender, ArrayList eegData)
         {
@@ -246,10 +236,14 @@ namespace BrainStorm.EEG
                     // add current frequency as label for above sample
                     Trainer.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
                 }
+
                 if (Classification.IsValidation)
                 {   
                     Predictor.CurrPredictionPoints = currPredictorPoints.ToArray();
+                    // this method will normalize and conduct pca if specified
                     Predictor.MakePrediction();
+                    Validation.PredictorPointsValidateRaw.Add(Predictor.CurrPredictionPoints);
+                    Validation.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
                 }
 
                 Classification.NumSamples += 1;

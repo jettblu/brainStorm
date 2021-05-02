@@ -130,6 +130,7 @@
     <Compile Include="CortexAccess\Record.cs" />
     <Compile Include="CortexAccess\SessionCreator.cs" />
     <Compile Include="CortexAccess\Training.cs" />
+    <Compile Include="EEG\Validation.cs" />
     <Compile Include="MLHelper\ArtifiactCurator.cs" />
     <Compile Include="MLHelper\FeatureStandards.cs" />
     <Compile Include="MLHelper\Normalizer.Cs" />

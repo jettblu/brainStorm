@@ -9,9 +9,12 @@ using Accord;
 using Accord.MachineLearning;
 using Accord.MachineLearning.DecisionTrees;
 using Accord.MachineLearning.DecisionTrees.Learning;
+using Accord.Math.Optimization;
 using Accord.Math.Optimization.Losses;
 using Accord.Statistics.Analysis;
 using Accord.Statistics.Filters;
+using Accord.Statistics.Models.Regression;
+using Accord.Statistics.Models.Regression.Fitting;
 using Accord.Statistics.Models.Regression.Linear;
 using BrainStorm.Graphics;
 using BrainStorm.MLHelper;
@@ -36,24 +39,27 @@ namespace BrainStorm.EEG
         // # of trees in random forest.. hardcoded
         public const int NumTrees = 100;
 
-        public static void FitData()
+        public static void FitData(bool normalize = false, bool usePca = false)
         {   
             Predictor.FeatureNormalizer = new Normalizer();
-            NormalizeFeatures();
+            if(normalize || usePca) NormalizeFeatures();
             // set label types
             FrequencyLabelsInt = FrequencyLabelsRaw.ConvertAll(Convert.ToInt32).ToArray();
             FrequencyLabelsDouble = FrequencyLabelsRaw.ToArray();
             PredictorPointsTrain = PredictorPointsTrainRaw.ToArray();
-            //SetPrincipleComponents();
+
+            if (usePca) SetPrincipleComponents();
+
             if (IsClassifier)
             {
                 TrainClassifiers();
             }
             else
             {
-                RunRegression();
+                TrainRegression();
             }
         }
+
         // normalize data to z scores using each feature's mean and std. dev.
         public static void NormalizeFeatures()
         {   
@@ -75,11 +81,13 @@ namespace BrainStorm.EEG
                     featureIndex += 1;
                 }
             }
+
             // standardize each feature
-            foreach (var featureList in featureHolder)
+            for (int i = 0; i < featureHolder.Count; i++)
             {
-                Standardize(featureList);
+                featureHolder[i] = Standardize(featureHolder[i]);
             }
+
 
             var rowIndex = 0;
             // swap each value in predictorpointstrainraw with normalized version
@@ -97,8 +105,9 @@ namespace BrainStorm.EEG
         }
 
         // z score scaling (zero mean)
-        public static void Standardize(List<double> features)
+        public static List<double> Standardize(List<double> features)
         {
+            var standardizedFeatures = new List<double>();
             var featureMean = features.Mean();
             var featureStd = features.StandardDeviation();
             var standardizer = new FeatureStandards(featureMean, featureStd);
@@ -107,12 +116,13 @@ namespace BrainStorm.EEG
             foreach (var value in features)
             {   
                 // swap raw value for normalized value
-                features[currIndex] =  value - featureMean / featureStd;
+                standardizedFeatures.Add(value - featureMean / featureStd);
                 currIndex += 1;
             }
+            return standardizedFeatures;
         }
 
-        public static void RunRegression()
+        public static void TrainRegression()
         {
             
             // use ordinary least squares as train type
@@ -125,39 +135,55 @@ namespace BrainStorm.EEG
             Predictor.MultipleGeneralRegression = ols.Learn(PredictorPointsTrain, FrequencyLabelsDouble);
 
 
-            // We can compute the predicted points using
-            double[] predicted = Predictor.MultipleGeneralRegression.Transform(PredictorPointsTrain);
+            // Compute the predicted points using
+            double[] predictedMGR = Predictor.MultipleGeneralRegression.Transform(PredictorPointsTrain);
 
 
             // We can also compute other measures, such as the coefficient of determination r²
-            double r2 = new RSquaredLoss(numberOfInputs: PredictorPointsTrain.Length, expected: FrequencyLabelsDouble).Loss(predicted); 
+            double r2 = new RSquaredLoss(numberOfInputs: PredictorPointsTrain.Length, expected: FrequencyLabelsDouble).Loss(predictedMGR); 
             
-            Console.WriteLine($"Multiple Linear Regression R^2: {r2}\n");
+            Console.WriteLine($"Multiple Linear Regression R^2 TRAIN: {r2}\n");
 
             Console.Write("Multiple Linear regression fit succesfully!");
+
         }
 
 
         public static void TrainClassifiers()
         {
+            // -------------------------- Logistic Regression ----------------------------------
 
-            var knn = Predictor.KNN;
+            var MLRG = new MultinomialLogisticLearning<GradientDescent>();
 
-            // We learn the algorithm:
-            knn.Learn(PredictorPointsTrain, FrequencyLabelsInt);
+            Predictor.MultinomialLogisticRegression = MLRG.Learn(PredictorPointsTrain, FrequencyLabelsInt);
 
-            // compute the error matrix for the classifier:
-            var cm = GeneralConfusionMatrix.Estimate(knn, PredictorPointsTrain, FrequencyLabelsInt);
-            Console.WriteLine($"KNN CM: {cm} \n KNN Error: {cm.Error} KNN ACcuracy: {cm.Accuracy}");
+             // Compute multinomial logistic regression answers
+             int[] answersMLR = Predictor.MultinomialLogisticRegression.Decide(PredictorPointsTrain);
+            // Check how multinomial logistic regression is predicting
+            double errorMLR = new ZeroOneLoss(FrequencyLabelsInt).Loss(answersMLR);
+            Console.WriteLine($"Multinomial Logistic Regression Error: {errorMLR}");
 
-            // Create forest learning algorithm
+           
+
+            // -------------------------- Random Forest ----------------------------------
+
             var teacher = new RandomForestLearning()
             {
                 NumberOfTrees = NumTrees,
             };
-            // Learn a random forest from eeg features
-            Predictor.RandomForest = teacher.Learn(PredictorPointsTrain, FrequencyLabelsInt);
+            Predictor.RandomForest = teacher.Learn(PredictorPointsTrain, FrequencyLabelsInt);     
+
+
+            // -------------------------- Minimum Mean Distance ----------------------------------
+
+            var mmdc = new MinimumMeanDistanceClassifier();
+
+            // Compute the analysis and create a classifier
+            mmdc.Learn(PredictorPointsTrain, FrequencyLabelsInt);
+
+            
         }
+
         public static void SetPrincipleComponents()
         {
             var data = PredictorPointsTrainRaw.ToArray();
@@ -167,14 +193,13 @@ namespace BrainStorm.EEG
                 Method = PrincipalComponentMethod.Center,
                 Whiten = true
             };
-
+            Predictor.PCA.ExplainedVariance = 0.25;
             // Recieve first n components by setting 
             // NumberOfOutputs to the desired components:
             Predictor.PCA.NumberOfOutputs = NumComponents;
             Predictor.PCA.Learn(data);
             // And then calling transform again:
             PredictorPointsTrain = Predictor.PCA.Transform(data);
-
         }
        
     }
