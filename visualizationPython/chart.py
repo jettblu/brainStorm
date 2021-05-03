@@ -1,7 +1,6 @@
 import numpy as np
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import copy
 
 
 def chartElectrode(electrode):
@@ -25,14 +24,21 @@ def chartElectrode(electrode):
     gammaMovingAvg = np.array(electrode.Gamma.MovingAvgValues).astype(np.float)
 
     bandMask = np.isfinite(theta)
-    bandTimes = np.array(times)[bandMask]
-
     eegMask = np.isfinite(eegRaw)
-    eegTimes = np.array(times)[eegMask]
+
+    # make lists same length
+    bandTimesTrimmed, bandMaskTrimmed = trimLists(times, bandMask)
+
+    bandTimes = np.array(bandTimesTrimmed)[bandMaskTrimmed]
+
+    # make lists same length
+    eegTimesTrimmed, eegMaskTrimmed = trimLists(times, eegMask)
+
+    eegTimes = np.array(eegTimesTrimmed)[eegMaskTrimmed]
 
     setBounds(electrode)
 
-    bandBoundTimes = np.array(times)[electrode.BandBoundMask]
+    bandBoundTimes = np.array(bandTimesTrimmed)[electrode.BandBoundMask]
     eegBoundTimes = np.array(times)[electrode.RawEEGBoundMask]
 
     axs[0, 0].plot(eegTimes, eegRaw[eegMask], label="Signal")
@@ -80,10 +86,10 @@ def chartElectrode(electrode):
     # set legend
     fig.legend()
 
-    # set x labels
+    # set y labels
     axs[0, 0].set(ylabel='Signal Values')
     axs[1, 0].set(ylabel='Signal Values')
-    # set y labels
+    # set x labels
     axs[1, 0].set(xlabel='Time (ms)')
     axs[1, 1].set(xlabel='Time (ms)')
     axs[1, 2].set(xlabel='Time (ms)')
@@ -91,13 +97,108 @@ def chartElectrode(electrode):
     plt.show()
 
 
+def chartTrainResponse(electrode):
+    fig, axs = plt.subplots(2, 3, sharex=False)
+    fig.suptitle(f"{electrode.Name} Train Response")
+    # set subplot titles
+    axs[0, 0].set_title('EEG RAW')
+    axs[0, 1].set_title('Alpha')
+    axs[0, 2].set_title('Theta')
+    axs[1, 1].set_title('Beta High')
+    axs[1, 2].set_title('Gamma')
+    # plot response points
+    chartResponsePoints(axs[0, 0], electrode.RawEEG, setLabel=True)
+    chartResponsePoints(axs[0, 1], electrode.Alpha)
+    chartResponsePoints(axs[0, 2], electrode.Theta)
+    chartResponsePoints(axs[1, 0], electrode.BetaL)
+    chartResponsePoints(axs[1, 1], electrode.BetaH)
+    chartResponsePoints(axs[1, 2], electrode.Gamma)
+
+    # set legend
+    fig.legend()
+
+    # set y labels
+    axs[0, 0].set(ylabel='Frequency')
+    axs[1, 0].set(ylabel='Frequency')
+    # set x labels
+    axs[1, 0].set(xlabel='Signal Value')
+    axs[1, 1].set(xlabel='Signal Value')
+    axs[1, 2].set(xlabel='Signal Value')
+
+    plt.show()
+
+
+def chartResponseAcrossElectrodes(electrodeDict, bandName):
+    rows = 2
+    cols = 7
+    fig, axs = plt.subplots(2, 7, sharex=False, sharey=True)
+
+    fig.suptitle(f"Train Response Across {bandName}")
+    currCol = 0
+    currRow = 0
+
+
+    for electrodeName in electrodeDict:
+
+        # set y labels for each new row
+        if currCol == 0:
+            axs[currRow, currCol].set(ylabel="Frequency")
+
+        # set x labels for bottom charts
+        if currRow == rows-1:
+            for colIndex in range(cols):
+                axs[currRow, colIndex].set(xlabel="Signal Value")
+
+        currElectrode = electrodeDict[electrodeName]
+        currBand = selectFrequencyBand(bandName=bandName, currElectrode=currElectrode)
+        # stop if bandName is not valid
+        if currBand is None:
+            return
+        # set legend labels when first grid is plot
+        if currCol == 0 and currRow == 0:
+            chartResponsePoints(axs[currRow, currCol], currBand, setLabel=True)
+        else:
+            chartResponsePoints(axs[currRow, currCol], currBand)
+
+        axs[currRow, currCol].set_title(f"{currElectrode.Name}")
+
+        currCol += 1
+
+        if currCol == cols:
+            currCol = 0
+            currRow += 1
+
+            if currRow == rows:
+                # set legend
+                fig.legend()
+                plt.show()
+                return
+
+
 def chartPeak(subplot, EEGData, setLabel=False):
     xVals = [x[0] for x in EEGData.PeakPoints]
     yVals = [x[1] for x in EEGData.PeakPoints]
+
     if setLabel:
-        subplot.plot(xVals, yVals, 'bo', label="Blinks")
+        subplot.plot(xVals, yVals, 'bo', label="Blinks", markersize=3)
+    else:
+        subplot.plot(xVals, yVals, 'bo', markersize=3)
+
+
+def chartResponsePoints(subplot, EEGData, setLabel=False):
+    xVals = [x[0] for x in EEGData.TrainingPoints]
+    yVals = [x[1] for x in EEGData.TrainingPoints]
+
+    coef = np.polyfit(xVals, yVals, 1)
+    # a function which takes in x and returns an estimate for y
+    poly1dFn = np.poly1d(coef)
+
+    if setLabel:
+        subplot.plot(xVals, yVals, 'bo', label="Response")
+        subplot.plot(xVals, poly1dFn(xVals), '-r', label="1D Regression")
     else:
         subplot.plot(xVals, yVals, 'bo')
+        subplot.plot(xVals, poly1dFn(xVals), '-r')
 
 
 def chartEEG(electrode, title="Signal vs. Time"):
@@ -109,12 +210,14 @@ def chartEEG(electrode, title="Signal vs. Time"):
 
     boundTimes = np.array(times)[electrode.RawEEGBoundMask]
 
-    plt.plot(signalTimes, signal[signalMask], '-')
-    plt.fill_between(boundTimes, electrode.RawEEG.LowerBounds, electrode.RawEEG.UpperBounds, facecolor='red', alpha=0.5)
-
+    plt.plot(signalTimes, signal[signalMask], '-', label="Signal")
+    plt.fill_between(boundTimes, electrode.RawEEG.LowerBounds, electrode.RawEEG.UpperBounds, facecolor='red', alpha=0.5, label="Dynamic Bounds")
+    chartPeak(plt, electrode.RawEEG, setLabel=True)
     plt.ylabel('Value')
     plt.xlabel("Time")
     plt.title(title)
+    # set legend
+    plt.legend()
     plt.show()
 
 
@@ -172,3 +275,34 @@ def convertSignal(signal):
     signal = np.array(signal).astype(np.float)
     signalMask = np.isfinite(signal)
     return signal[signalMask], signalMask
+
+
+def trimLists(listA, listB):
+    # make lists same length
+    listACopy = copy.copy(listA)
+    listBCopy = copy.copy(listB)
+
+    while len(listACopy) > len(listB):
+        listACopy.pop()
+
+    while len(listBCopy) > (len(listA)):
+        listBCopy.pop()
+
+    return listACopy, listBCopy
+
+
+def selectFrequencyBand(currElectrode, bandName):
+    currBand = None
+    if bandName == "RawEEG":
+        currBand = currElectrode.RawEEG
+    elif bandName == "Alpha":
+        currBand = currElectrode.Alpha
+    elif bandName == "Theta":
+        currBand = currElectrode.Theta
+    elif bandName == "BetaL":
+        currBand = currElectrode.BetaL
+    elif bandName == "BetaH":
+        currBand = currElectrode.BetaH
+    elif bandName == "Gamma":
+        currBand = currElectrode.Gamma
+    return currBand
