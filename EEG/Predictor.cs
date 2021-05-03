@@ -46,8 +46,6 @@ namespace BrainStorm.EEG
             // only use if features are normalized first
             if(usePca) CurrPredictionPoints = PCA.Transform(CurrPredictionPoints);
 
-
-
             if (Classification.IsClassifier)
             {
                 Classify();
@@ -78,16 +76,18 @@ namespace BrainStorm.EEG
             {
                 mmdPred = MinimumMeanDistance.Decide(CurrPredictionPoints);
                 mmdScore = MinimumMeanDistance.Score(CurrPredictionPoints);
+                PredictedFrequencyClassifiers = mmdPred;
+                Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Minimun Distance Predicted Frequency: {PredictedFrequencyClassifiers}");
             }
 
             var rfPred = -1;
             if (RandomForest != null)
             {
                 rfPred = RandomForest.Decide(CurrPredictionPoints);
+                Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Random Forest Predicted Frequency: {rfPred}");
             }
-            PredictedFrequencyClassifiers = mmdPred;
-            Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} KNN Predicted Frequency: {PredictedFrequencyClassifiers}");
-            Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Random Forest Predicted Frequency: {RandomForest.Decide(CurrPredictionPoints)}");
+            
+            
         }
 
         public static void Regression()

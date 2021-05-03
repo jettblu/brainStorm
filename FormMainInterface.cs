@@ -217,11 +217,13 @@ namespace BrainStorm
         {   
             
             if (BackTestSelector.ShowDialog() != DialogResult.OK) return;
-            var BackTest = new BackTest();
+            BackTest = new BackTest();
             SignalProcessor.IsBackTest = true;
+            BackTest.MaxSpeed = cBoxBackTestWait.Checked;
             // attach event handlers for back test
             BackTest.OnBackTestBandDataRecieved += SignalProcessor.OnBandPowerRecieved;
             BackTest.OnBackTestEEGDataRecieved += SignalProcessor.OnEEGDataReceived;
+            Utils.UserMessage("Backtest will start after dialogue is closed.", messageType:Globals.MessageTypes.Status);
             new Thread(() =>
                 {
 
@@ -231,6 +233,12 @@ namespace BrainStorm
                 })
                 { IsBackground = true }.Start();
             
+        }
+
+        private void cBoxBackTestWait_CheckedChanged(object sender, EventArgs e)
+        {   
+            // don't switch speed while running
+            if(SignalProcessor.IsBackTest) return;
         }
     }
 }

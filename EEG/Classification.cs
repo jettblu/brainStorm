@@ -33,6 +33,9 @@ namespace BrainStorm.EEG
         // electrodes classification will extract features from
         public static List<string> ClassificationElectrodes = new List<string>() {"AF3", "F7", "F3", "F4", "F8", "AF4"};
         public static List<int> ClassificationElectrodesIndices = new List<int>();
+        //How many seconds to wait until considered pure... hardcoded
+        public const double PureSeconds = 2.5;
+
         // frequency classes used for SSVEP
         public static List<int> FrequencyClasses = new List<int>()
         {
@@ -45,12 +48,12 @@ namespace BrainStorm.EEG
             get => _eegDataCount;
             set
             {
-                if (IsRunning && BrainStorm0.ClassificationShape.FrequencyUpdated)
+                if (IsRunning)
                 {
                     _eegDataCount += 1;
                 }
-                // if two seconds have elapsed... sample is pure... start collecting samples
-                if (_eegDataCount > SignalProcessor.SamplingRate * 2)
+                // if x seconds have elapsed... sample is pure... start collecting samples
+                if (_eegDataCount > SignalProcessor.SamplingRate * PureSeconds)
                 {
                     IsPure = true;
                 }
@@ -82,7 +85,7 @@ namespace BrainStorm.EEG
         }
 
 
-        public static void StartProcess(int numUniqueLabels = 40)
+        public static void StartProcess(int numUniqueLabels = 50)
         {
             BrainStorm0.MainGrid.ClearShapes();
             // set testing grid dimensions
@@ -137,7 +140,7 @@ namespace BrainStorm.EEG
         {
             if (SignalProcessor.IsBackTest)
             {
-                CurrFrequency = BackTest.ClassificationFrequency;
+                CurrFrequency = BrainStorm0.BackTest.ClassificationFrequency;
             }
             else
             {

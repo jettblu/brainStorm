@@ -38,7 +38,7 @@ namespace BrainStorm.EEG
         // freq. band names
         public static List<string> FreqBandNames { get; set; }
         // # of electrodes needed to fire for event to be considered an artifact... hardcoded
-        public const int ArtifactThresholdEEG = 7;
+        public const int ArtifactThresholdEEG = 3;
         public static ArtifiactCurator ArtifactManager = new ArtifiactCurator();
         public static bool IsBackTest = false;
    
@@ -89,6 +89,7 @@ namespace BrainStorm.EEG
                 currIndex += 1;
             }
         }
+
         // create electrode instance for each electrode name in list
         public static void CreateElectrodes()
         {
@@ -98,6 +99,7 @@ namespace BrainStorm.EEG
                 Electrodes[name] = electrode;
             }
         }
+
         // Write Header and Data to File
         private static void WriteDataToFile(ArrayList data, bool needsOffset = false, bool isHeader = false)
         {
@@ -234,7 +236,15 @@ namespace BrainStorm.EEG
                     // add current data sample
                     Trainer.PredictorPointsTrainRaw.Add(currPredictorPoints.ToArray());
                     // add current frequency as label for above sample
-                    Trainer.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
+                    if (IsBackTest)
+                    {
+                        Trainer.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.BackTest.ClassificationFrequency));
+                    }
+                    else
+                    {
+                        Trainer.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
+                    }
+                    
                 }
 
                 if (Classification.IsValidation)
@@ -243,7 +253,15 @@ namespace BrainStorm.EEG
                     // this method will normalize and conduct pca if specified
                     Predictor.MakePrediction();
                     Validation.PredictorPointsValidateRaw.Add(Predictor.CurrPredictionPoints);
-                    Validation.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
+                    if (IsBackTest)
+                    {
+                        Trainer.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.BackTest.ClassificationFrequency));
+                    }
+                    else
+                    {
+                        Validation.FrequencyLabelsRaw.Add(Convert.ToDouble(BrainStorm0.ClassificationShape.Hertz));
+                    }
+                    
                 }
 
                 Classification.NumSamples += 1;

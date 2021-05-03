@@ -61,7 +61,7 @@ namespace BrainStorm.EEG
 
             var cmMMD = GeneralConfusionMatrix.Estimate(Predictor.MinimumMeanDistance, PredictorPoints,
                 FrequencyLabelsInt);
-            Console.WriteLine($"RF CM: {cmMMD} \n RF Error: {cmMMD.Error} RF ACcuracy: {cmMMD.Accuracy}");
+            Console.WriteLine($"MMD CM: {cmMMD} \n MMD Error: {cmMMD.Error} MMD ACcuracy: {cmMMD.Accuracy}");
         }
     }
 }

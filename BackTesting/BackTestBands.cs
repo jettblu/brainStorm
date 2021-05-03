@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BrainStorm.EEG;
 
 namespace BrainStorm.BackTesting
 {
@@ -187,6 +188,7 @@ namespace BrainStorm.BackTesting
             RawData.Add(AF4BetaL);
             RawData.Add(AF4BetaH);
             RawData.Add(AF4Gamma);
+
         }
 
     }

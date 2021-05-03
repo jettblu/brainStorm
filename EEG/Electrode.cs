@@ -55,7 +55,7 @@ namespace BrainStorm.EEG
 
 
 
-        public Electrode(string name, int windowSizeEEG = 180, double influenceEEG = 1, double zThresholdEEG = 3.5, int windowSizeBand = 10, double influenceBand = 0, double zThresholdBand = 3.5)
+        public Electrode(string name, int windowSizeEEG = 180, double influenceEEG = .2, double zThresholdEEG = 3.5, int windowSizeBand = 10, double influenceBand = 0, double zThresholdBand = 3.5)
         {
             Name = name;
             // set electrode parameters
@@ -84,7 +84,7 @@ namespace BrainStorm.EEG
             double zThresholdPeak = new double();
             bool isPreload = new bool();
 
-            // change parameters based on whther band or raw eeg
+            // change parameters based on whether band or raw eeg
             if (isBand)
             {
                 windowSizePeak = WindowSizeBand;

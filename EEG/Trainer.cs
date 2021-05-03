@@ -53,10 +53,12 @@ namespace BrainStorm.EEG
             if (IsClassifier)
             {
                 TrainClassifiers();
+                CalulateTrainStatisticsClassification();
             }
             else
             {
                 TrainRegression();
+                CalculateTrainStatisticsRegression();
             }
         }
 
@@ -135,19 +137,24 @@ namespace BrainStorm.EEG
             Predictor.MultipleGeneralRegression = ols.Learn(PredictorPointsTrain, FrequencyLabelsDouble);
 
 
+           
+
+        }
+
+        public static void CalculateTrainStatisticsRegression()
+        {
+            Console.WriteLine("----TRAIN Statistics----");
             // Compute the predicted points using
             double[] predictedMGR = Predictor.MultipleGeneralRegression.Transform(PredictorPointsTrain);
 
 
             // We can also compute other measures, such as the coefficient of determination r²
-            double r2 = new RSquaredLoss(numberOfInputs: PredictorPointsTrain.Length, expected: FrequencyLabelsDouble).Loss(predictedMGR); 
-            
-            Console.WriteLine($"Multiple Linear Regression R^2 TRAIN: {r2}\n");
+            double r2 = new RSquaredLoss(numberOfInputs: PredictorPointsTrain.Length, expected: FrequencyLabelsDouble).Loss(predictedMGR);
+
+            Console.WriteLine($"Multiple Linear Regression R^2: {r2}\n");
 
             Console.Write("Multiple Linear regression fit succesfully!");
-
         }
-
 
         public static void TrainClassifiers()
         {
@@ -156,12 +163,6 @@ namespace BrainStorm.EEG
             var MLRG = new MultinomialLogisticLearning<GradientDescent>();
 
             Predictor.MultinomialLogisticRegression = MLRG.Learn(PredictorPointsTrain, FrequencyLabelsInt);
-
-             // Compute multinomial logistic regression answers
-             int[] answersMLR = Predictor.MultinomialLogisticRegression.Decide(PredictorPointsTrain);
-            // Check how multinomial logistic regression is predicting
-            double errorMLR = new ZeroOneLoss(FrequencyLabelsInt).Loss(answersMLR);
-            Console.WriteLine($"Multinomial Logistic Regression Error: {errorMLR}");
 
            
 
@@ -176,12 +177,28 @@ namespace BrainStorm.EEG
 
             // -------------------------- Minimum Mean Distance ----------------------------------
 
-            var mmdc = new MinimumMeanDistanceClassifier();
+            Predictor.MinimumMeanDistance= new MinimumMeanDistanceClassifier();
 
             // Compute the analysis and create a classifier
-            mmdc.Learn(PredictorPointsTrain, FrequencyLabelsInt);
+            Predictor.MinimumMeanDistance.Learn(PredictorPointsTrain, FrequencyLabelsInt);
 
-            
+
+        }
+
+        public static void CalulateTrainStatisticsClassification()
+        {
+            Console.WriteLine("----TRAIN Statistics----");
+            var cmLR = GeneralConfusionMatrix.Estimate(Predictor.MultinomialLogisticRegression, PredictorPointsTrain,
+                FrequencyLabelsInt);
+
+            Console.WriteLine($"LR CM: {cmLR} \n LR Error: {cmLR.Error} LR ACcuracy: {cmLR.Accuracy}");
+
+            var cmMMD = GeneralConfusionMatrix.Estimate(Predictor.MinimumMeanDistance, PredictorPointsTrain,
+                FrequencyLabelsInt);
+            Console.WriteLine($"MMD CM: {cmMMD} \n MMD Error: {cmMMD.Error} MMD ACcuracy: {cmMMD.Accuracy}");
+
+            var cmTree = GeneralConfusionMatrix.Estimate(Predictor.RandomForest, PredictorPointsTrain, FrequencyLabelsInt);
+            Console.WriteLine($"RF CM: {cmTree} \n RF Error: {cmTree.Error} RF ACcuracy: {cmTree.Accuracy}");
         }
 
         public static void SetPrincipleComponents()

@@ -63,6 +63,9 @@
             this.btnLoadFile = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.BackTestSelector = new System.Windows.Forms.OpenFileDialog();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cBoxBackTestWait = new System.Windows.Forms.CheckBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -73,6 +76,7 @@
             this.gboxControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pboxUndo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxClear)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // gboxOutput
@@ -423,7 +427,7 @@
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.Info;
-            this.label9.Location = new System.Drawing.Point(596, 723);
+            this.label9.Location = new System.Drawing.Point(678, 687);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(68, 20);
             this.label9.TabIndex = 25;
@@ -433,7 +437,7 @@
             // 
             this.cBoxClassification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cBoxClassification.AutoSize = true;
-            this.cBoxClassification.Location = new System.Drawing.Point(668, 640);
+            this.cBoxClassification.Location = new System.Drawing.Point(401, 640);
             this.cBoxClassification.Name = "cBoxClassification";
             this.cBoxClassification.Size = new System.Drawing.Size(113, 24);
             this.cBoxClassification.TabIndex = 26;
@@ -446,7 +450,7 @@
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.SystemColors.Info;
-            this.label10.Location = new System.Drawing.Point(541, 641);
+            this.label10.Location = new System.Drawing.Point(272, 638);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(123, 20);
             this.label10.TabIndex = 27;
@@ -455,7 +459,8 @@
             // btnLoadFile
             // 
             this.btnLoadFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLoadFile.Location = new System.Drawing.Point(670, 666);
+            this.btnLoadFile.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnLoadFile.Location = new System.Drawing.Point(84, 72);
             this.btnLoadFile.Name = "btnLoadFile";
             this.btnLoadFile.Size = new System.Drawing.Size(119, 40);
             this.btnLoadFile.TabIndex = 28;
@@ -468,7 +473,7 @@
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.SystemColors.Info;
-            this.label11.Location = new System.Drawing.Point(596, 677);
+            this.label11.Location = new System.Drawing.Point(13, 82);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(65, 20);
             this.label11.TabIndex = 29;
@@ -479,14 +484,52 @@
             this.BackTestSelector.FileName = "openFileDialog1";
             this.BackTestSelector.Filter = "CSV|*.csv";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.cBoxBackTestWait);
+            this.groupBox1.Controls.Add(this.btnLoadFile);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.Info;
+            this.groupBox1.Location = new System.Drawing.Point(426, 621);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(219, 142);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "BackTesting";
+            // 
+            // cBoxBackTestWait
+            // 
+            this.cBoxBackTestWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cBoxBackTestWait.AutoSize = true;
+            this.cBoxBackTestWait.Checked = true;
+            this.cBoxBackTestWait.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cBoxBackTestWait.Location = new System.Drawing.Point(114, 41);
+            this.cBoxBackTestWait.Name = "cBoxBackTestWait";
+            this.cBoxBackTestWait.Size = new System.Drawing.Size(22, 21);
+            this.cBoxBackTestWait.TabIndex = 28;
+            this.cBoxBackTestWait.UseVisualStyleBackColor = true;
+            this.cBoxBackTestWait.CheckedChanged += new System.EventHandler(this.cBoxBackTestWait_CheckedChanged);
+            // 
+            // label12
+            // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.SystemColors.Info;
+            this.label12.Location = new System.Drawing.Point(13, 40);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(93, 20);
+            this.label12.TabIndex = 30;
+            this.label12.Text = "Max Speed:";
+            // 
             // BrainStorm0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1318, 764);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.btnLoadFile);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.cBoxClassification);
             this.Controls.Add(this.label9);
@@ -520,6 +563,8 @@
             this.gboxControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pboxUndo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxClear)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -562,6 +607,9 @@
         private System.Windows.Forms.Button btnLoadFile;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.OpenFileDialog BackTestSelector;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox cBoxBackTestWait;
     }
 }
 
