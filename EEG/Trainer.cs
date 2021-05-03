@@ -39,7 +39,7 @@ namespace BrainStorm.EEG
         // # of trees in random forest.. hardcoded
         public const int NumTrees = 100;
 
-        public static void FitData(bool normalize = false, bool usePca = false)
+        public static void FitData(bool normalize = true, bool usePca = false)
         {   
             Predictor.FeatureNormalizer = new Normalizer();
             if(normalize || usePca) NormalizeFeatures();

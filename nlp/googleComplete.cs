@@ -105,6 +105,15 @@ namespace BrainStorm.nlp
             //order likely fragment dicts from most likely to least likely
             LikelyLetters = LikelyLetters.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             LikelyWords = LikelyWords.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+            // handles case where likely fragment is also likley letter
+            // eg.. wh -> fragment: y and likely letter: y
+            foreach (var word in LikelyWords)
+            {
+             if(LikelyLetters.ContainsKey(word.Key))
+             {
+                 LikelyWords.Remove(word.Key);
+             }
+            }
         }
 
         private void GeneralLetters()

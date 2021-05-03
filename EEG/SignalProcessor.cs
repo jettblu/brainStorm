@@ -192,8 +192,15 @@ namespace BrainStorm.EEG
             var isArtifact = ArtifactManager.IsArtifact(CurrPeak: voteCount >= ArtifactThresholdEEG);
             if (isArtifact)
             {
-                Console.WriteLine("--------- Artifact Detected -------------");
+                Console.WriteLine($"--------- Artifact Detected. Last Votecout: {voteCount} -------------");
             }
+            var isSend = ArtifactManager.IsArtifactSend(isArtifact);
+            if (isSend && Classification.IsTyping)
+            {
+                Predictor.StrokeType = Globals.StrokeTypes.CtrlZ;
+                Console.WriteLine("Ctrl-z Initiated.");
+            }
+
         }
 
 
@@ -246,7 +253,12 @@ namespace BrainStorm.EEG
                     }
                     
                 }
-
+                if (Classification.IsTyping)
+                {
+                    Predictor.CurrPredictionPoints = currPredictorPoints.ToArray();
+                    Predictor.MakePrediction();
+                    Predictor.Classify();
+                }
                 if (Classification.IsValidation)
                 {   
                     Predictor.CurrPredictionPoints = currPredictorPoints.ToArray();

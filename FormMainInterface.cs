@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -12,7 +13,7 @@ using Timer = System.Windows.Forms.Timer;
 namespace BrainStorm
 {   
     public partial class BrainStorm0 : Form
-    {
+    {   
         public static Control MainControl { get; set; }
         public static Grid MainGrid { get; set; }
         public static Shape ClassificationShape { get; set; }
@@ -23,9 +24,16 @@ namespace BrainStorm
         public static bool RecordEEG = true;
         public static BackTest BackTest { get; set; }
         public static Thread FormThread { get; set; }
+        public string OutputText
+        {
+            get { return tboxOutput.Text; }
+            set { tboxOutput.Text = value; }
+        }
+        public static BrainStorm0 MainForm { get; set; }
         public BrainStorm0()
         {
             InitializeComponent();
+            MainForm = this;
             FormThread = Thread.CurrentThread;
         }
 
@@ -60,54 +68,23 @@ namespace BrainStorm
         private async void btnAutoComplete_ClickAsync(object sender, EventArgs e)
         {   
             var autoComplete = new googleComplete();
-            await autoComplete.GetSearchSuggestions(tboxPhrase.Text);
+            try
+            {
+                await autoComplete.GetSearchSuggestions(tboxPhrase.Text);
+            }
+            catch
+            {
+                Utils.UserMessage("Please Connect to the internet before using autocomplete.", messageType:Globals.MessageTypes.Error);
+            }
             //return if no autocomplete suggestions are returned
             if (autoComplete.AutoCompleteSuggestions.Count == 0)
             {
                 return;
             }
-            CreateSuggestionGrid(autoComplete);
+            TypingViews.CreateSuggestionGrid(autoComplete);
         }
 
-        private void CreateSuggestionGrid(googleComplete autoComplete)
-        {
-            var suggestedWordsPhrase = "";
-            var suggestedLettersPhrase = "";
-            var generalLettersPhrase = "";
-            MainGrid.ClearShapes();
-            // create 3 by 1 space that will contain likely letters, likely words, and general letters bin
-            MainGrid.Cols = 7;
-            MainGrid.Rows = 3;
-            MainGrid.DrawLines();
-            foreach (var likelyWord in autoComplete.LikelyWords)
-            {
-                suggestedWordsPhrase += $"{likelyWord.Key}\n";
-            }
-            foreach (var likelyLetter in autoComplete.LikelyLetters)
-            {
-                suggestedLettersPhrase += $"{likelyLetter.Key}\n";
-            }
-            var isNewLine = false;
-            foreach (var genLetter in autoComplete.GenLetters)
-            {
-                if (isNewLine)
-                {
-                    generalLettersPhrase += $"{genLetter}\n";
-                }
-                else
-                {
-                    generalLettersPhrase += $"{genLetter}\t";
-                }
-                isNewLine = !isNewLine;
-
-            }
-            var suggestedWordsShape = new Shape(1, 6, Color.WhiteSmoke, MainGrid, 25, suggestedWordsPhrase);
-            var suggestedLettersShape = new Shape(1, 3, Color.WhiteSmoke, MainGrid, 15, suggestedLettersPhrase);
-            var generalLettersShape = new Shape(1, 0, Color.WhiteSmoke, MainGrid, 10, generalLettersPhrase);
-            suggestedWordsShape.DrawBox();
-            suggestedLettersShape.DrawBox();
-            generalLettersShape.DrawBox();
-        }
+        
 
         private void RegressionTrainingRandomLocation(Object thisShape, EventArgs myEventArgs)
         {   
@@ -150,9 +127,10 @@ namespace BrainStorm
             if (EEGLogger.IsConnected)
             {
                 Classification.IsTraining = true;
-                Classification.StartProcess();
+                Classification.StartTrainProcess();
                 // enable validation after training
-                btnValidate.Enabled = true; 
+                btnValidate.Enabled = true;
+                btnStartTyping.Enabled = true;
             }
             else
             {
@@ -193,7 +171,7 @@ namespace BrainStorm
             if (EEGLogger.IsConnected)
             {
                 Classification.IsValidation = true;
-                Classification.StartProcess();
+                Classification.StartTrainProcess();
             }
             else
             {
@@ -204,7 +182,19 @@ namespace BrainStorm
 
         private void btnSendEmail_Click(object sender, EventArgs e)
         {
-            Utils.SendEmail("This Came from a Mind Controlled Keyboard!!", tboxPhrase.Text);
+            
+            try
+            {
+                Utils.SendEmail("This Came from a Mind Controlled Keyboard!!", tboxOutput.Text);
+                // disconnect from headset
+                EEGLogger.KeepRecording = false;
+                Utils.UserMessage("Email sent! Recording has stopped.", Globals.MessageTypes.Status);
+            }
+            catch
+            {
+                Utils.UserMessage("Issue sending email. Check error logs.", Globals.MessageTypes.Error);
+            }
+            
         }
 
         private void cBoxClassification_CheckedChanged(object sender, EventArgs e)
@@ -240,5 +230,13 @@ namespace BrainStorm
             // don't switch speed while running
             if(SignalProcessor.IsBackTest) return;
         }
+
+        private void btnStartTyping_Click(object sender, EventArgs e)
+        {
+            Classification.IsTyping = true;
+        }
+
+
+
     }
 }

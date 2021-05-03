@@ -18,6 +18,7 @@ namespace BrainStorm.EEG
         // indicate which component of classification
         public static bool IsTraining { get; set; }
         public static bool IsValidation { get; set; }
+        public static bool IsTyping { get; set; }
         // number of samples collected thus far for current frequency
         public static int NumSamples = 0;
         // total number of frequency labels to collect
@@ -57,7 +58,7 @@ namespace BrainStorm.EEG
                 {
                     IsPure = true;
                 }
-
+                // for training...
                 // if we have collected enough samples at current frequency... display new
                 if (NumSamples == SamplesToCollect)
                 {
@@ -85,8 +86,8 @@ namespace BrainStorm.EEG
         }
 
 
-        public static void StartProcess(int numUniqueLabels = 50)
-        {
+        public static void StartTrainProcess(int numUniqueLabels = 50)
+        {   
             BrainStorm0.MainGrid.ClearShapes();
             // set testing grid dimensions
             BrainStorm0.MainGrid.Cols = 7;
@@ -106,6 +107,14 @@ namespace BrainStorm.EEG
             IsRunning = true;
             IsPure = false;
             NumUniqueLabelsToCollect = numUniqueLabels;
+        }
+
+
+        public static void StartTypeProcess()
+        {   
+            IsRunning = true;
+            IsPure = false;
+            TypingViews.CreateInitialGrid();
         }
 
         public static void StopProcess()

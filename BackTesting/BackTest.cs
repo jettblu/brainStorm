@@ -47,7 +47,7 @@ namespace BrainStorm.BackTesting
                             {
                                 Classification.IsTraining = true;
                                 Classification.IsRunning = true;
-                                Classification.StartProcess();
+                                Classification.StartTrainProcess();
                                 ClassificationHasStarted = true;
                             }
                             var freq = csv.GetField("AF3/theta ").Split('/')[FrequencyCSVIndex].Trim();
@@ -160,7 +160,7 @@ namespace BrainStorm.BackTesting
                             {
                                 Classification.IsTraining = true;
                                 Classification.IsRunning = true;
-                                Classification.StartProcess();
+                                Classification.StartTrainProcess();
                                 ClassificationHasStarted = true;
                             }
                             ClassificationFrequency =

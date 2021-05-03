@@ -80,6 +80,8 @@ namespace BrainStorm.Graphics
 
         public Grid CurrGrid { get; set; }
         public string Text { get; set; }
+        // language displayed for selection
+        public List<string> Language { get; set; }
 
         public Shape(int shapeRow, int shapeCol, Color color, Grid grid, int hertz, string text = "sample text", int horPadding=5, int vertPadding=10)
         {   
@@ -180,6 +182,18 @@ namespace BrainStorm.Graphics
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
             CurrGrid.G.DrawString(innerText, TextFont, textBrush, x, y, stringFormat);
+        }
+
+        public void CheckTypingState()
+        {
+            if (Classification.IsTyping)
+            {
+                if (Predictor.StrokeType == Globals.StrokeTypes.Waiting) return;
+                if (Predictor.StrokeType == Globals.StrokeTypes.Output) TypingViews.UpdateOutputView();
+                if (Predictor.StrokeType == Globals.StrokeTypes.Filter) TypingViews.FilterView();
+                if (Predictor.StrokeType == Globals.StrokeTypes.Filter) TypingViews.CtrlZView();
+                Predictor.StrokeType = Globals.StrokeTypes.Waiting;
+            }
         }
 
     }

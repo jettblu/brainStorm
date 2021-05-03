@@ -41,7 +41,7 @@
             this.numRows = new System.Windows.Forms.NumericUpDown();
             this.numCols = new System.Windows.Forms.NumericUpDown();
             this.btnTest = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tboxOutput = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pboxInterface = new System.Windows.Forms.PictureBox();
             this.btnClear = new System.Windows.Forms.Button();
@@ -64,8 +64,12 @@
             this.label11 = new System.Windows.Forms.Label();
             this.BackTestSelector = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cBoxBackTestWait = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.cBoxBackTestWait = new System.Windows.Forms.CheckBox();
+            this.gBoxType = new System.Windows.Forms.GroupBox();
+            this.btnStartTyping = new System.Windows.Forms.Button();
+            this.Begin = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -77,6 +81,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pboxUndo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxClear)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.gBoxType.SuspendLayout();
             this.SuspendLayout();
             // 
             // gboxOutput
@@ -95,11 +100,11 @@
             this.gboxOutput.Controls.Add(this.numRows);
             this.gboxOutput.Controls.Add(this.numCols);
             this.gboxOutput.Controls.Add(this.btnTest);
-            this.gboxOutput.Controls.Add(this.textBox1);
+            this.gboxOutput.Controls.Add(this.tboxOutput);
             this.gboxOutput.Controls.Add(this.label1);
             this.gboxOutput.Location = new System.Drawing.Point(13, 13);
             this.gboxOutput.Name = "gboxOutput";
-            this.gboxOutput.Size = new System.Drawing.Size(1293, 101);
+            this.gboxOutput.Size = new System.Drawing.Size(1428, 101);
             this.gboxOutput.TabIndex = 0;
             this.gboxOutput.TabStop = false;
             // 
@@ -248,14 +253,14 @@
             this.btnTest.UseVisualStyleBackColor = true;
             this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
-            // textBox1
+            // tboxOutput
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tboxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(76, 15);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(1211, 26);
-            this.textBox1.TabIndex = 1;
+            this.tboxOutput.Location = new System.Drawing.Point(76, 15);
+            this.tboxOutput.Name = "tboxOutput";
+            this.tboxOutput.Size = new System.Drawing.Size(1346, 26);
+            this.tboxOutput.TabIndex = 1;
             // 
             // label1
             // 
@@ -275,7 +280,7 @@
             this.pboxInterface.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.pboxInterface.Location = new System.Drawing.Point(13, 120);
             this.pboxInterface.Name = "pboxInterface";
-            this.pboxInterface.Size = new System.Drawing.Size(1293, 484);
+            this.pboxInterface.Size = new System.Drawing.Size(1428, 484);
             this.pboxInterface.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pboxInterface.TabIndex = 1;
             this.pboxInterface.TabStop = false;
@@ -297,7 +302,7 @@
             this.gboxControls.Controls.Add(this.pboxUndo);
             this.gboxControls.Controls.Add(this.pboxClear);
             this.gboxControls.ForeColor = System.Drawing.SystemColors.Info;
-            this.gboxControls.Location = new System.Drawing.Point(837, 625);
+            this.gboxControls.Location = new System.Drawing.Point(972, 625);
             this.gboxControls.Name = "gboxControls";
             this.gboxControls.Size = new System.Drawing.Size(469, 138);
             this.gboxControls.TabIndex = 16;
@@ -414,7 +419,7 @@
             // 
             this.btnSendEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnSendEmail.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.btnSendEmail.Location = new System.Drawing.Point(670, 712);
+            this.btnSendEmail.Location = new System.Drawing.Point(93, 81);
             this.btnSendEmail.Name = "btnSendEmail";
             this.btnSendEmail.Size = new System.Drawing.Size(119, 40);
             this.btnSendEmail.TabIndex = 24;
@@ -429,14 +434,15 @@
             this.label9.ForeColor = System.Drawing.SystemColors.Info;
             this.label9.Location = new System.Drawing.Point(678, 687);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(68, 20);
+            this.label9.Size = new System.Drawing.Size(0, 20);
             this.label9.TabIndex = 25;
-            this.label9.Text = "Delivery:";
             // 
             // cBoxClassification
             // 
             this.cBoxClassification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cBoxClassification.AutoSize = true;
+            this.cBoxClassification.Checked = true;
+            this.cBoxClassification.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cBoxClassification.Location = new System.Drawing.Point(401, 640);
             this.cBoxClassification.Name = "cBoxClassification";
             this.cBoxClassification.Size = new System.Drawing.Size(113, 24);
@@ -486,18 +492,29 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.cBoxBackTestWait);
             this.groupBox1.Controls.Add(this.btnLoadFile);
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.Info;
-            this.groupBox1.Location = new System.Drawing.Point(426, 621);
+            this.groupBox1.Location = new System.Drawing.Point(426, 625);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(219, 142);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "BackTesting";
+            // 
+            // label12
+            // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.SystemColors.Info;
+            this.label12.Location = new System.Drawing.Point(13, 40);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(93, 20);
+            this.label12.TabIndex = 30;
+            this.label12.Text = "Max Speed:";
             // 
             // cBoxBackTestWait
             // 
@@ -512,28 +529,67 @@
             this.cBoxBackTestWait.UseVisualStyleBackColor = true;
             this.cBoxBackTestWait.CheckedChanged += new System.EventHandler(this.cBoxBackTestWait_CheckedChanged);
             // 
-            // label12
+            // gBoxType
             // 
-            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label12.AutoSize = true;
-            this.label12.ForeColor = System.Drawing.SystemColors.Info;
-            this.label12.Location = new System.Drawing.Point(13, 40);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(93, 20);
-            this.label12.TabIndex = 30;
-            this.label12.Text = "Max Speed:";
+            this.gBoxType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.gBoxType.Controls.Add(this.btnStartTyping);
+            this.gBoxType.Controls.Add(this.Begin);
+            this.gBoxType.Controls.Add(this.label13);
+            this.gBoxType.Controls.Add(this.btnSendEmail);
+            this.gBoxType.ForeColor = System.Drawing.SystemColors.Info;
+            this.gBoxType.Location = new System.Drawing.Point(651, 625);
+            this.gBoxType.Name = "gBoxType";
+            this.gBoxType.Size = new System.Drawing.Size(246, 142);
+            this.gBoxType.TabIndex = 31;
+            this.gBoxType.TabStop = false;
+            this.gBoxType.Text = "Typing";
+            // 
+            // btnStartTyping
+            // 
+            this.btnStartTyping.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnStartTyping.Enabled = false;
+            this.btnStartTyping.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnStartTyping.Location = new System.Drawing.Point(93, 35);
+            this.btnStartTyping.Name = "btnStartTyping";
+            this.btnStartTyping.Size = new System.Drawing.Size(119, 40);
+            this.btnStartTyping.TabIndex = 31;
+            this.btnStartTyping.Text = "Start Typing";
+            this.btnStartTyping.UseVisualStyleBackColor = true;
+            this.btnStartTyping.Click += new System.EventHandler(this.btnStartTyping_Click);
+            // 
+            // Begin
+            // 
+            this.Begin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.Begin.AutoSize = true;
+            this.Begin.ForeColor = System.Drawing.SystemColors.Info;
+            this.Begin.Location = new System.Drawing.Point(27, 45);
+            this.Begin.Name = "Begin";
+            this.Begin.Size = new System.Drawing.Size(54, 20);
+            this.Begin.TabIndex = 32;
+            this.Begin.Text = "Begin:";
+            // 
+            // label13
+            // 
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.SystemColors.Info;
+            this.label13.Location = new System.Drawing.Point(13, 91);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(68, 20);
+            this.label13.TabIndex = 31;
+            this.label13.Text = "Delivery:";
             // 
             // BrainStorm0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(1318, 764);
+            this.ClientSize = new System.Drawing.Size(1453, 764);
+            this.Controls.Add(this.gBoxType);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.cBoxClassification);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.btnSendEmail);
             this.Controls.Add(this.btnValidate);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.btnStopRecord);
@@ -565,6 +621,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pboxClear)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.gBoxType.ResumeLayout(false);
+            this.gBoxType.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -573,7 +631,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gboxOutput;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tboxOutput;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pboxInterface;
         private System.Windows.Forms.Button btnTest;
@@ -610,6 +668,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox cBoxBackTestWait;
+        private System.Windows.Forms.GroupBox gBoxType;
+        private System.Windows.Forms.Button btnStartTyping;
+        private System.Windows.Forms.Label Begin;
+        private System.Windows.Forms.Label label13;
     }
 }
 

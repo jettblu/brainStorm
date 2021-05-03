@@ -10,11 +10,15 @@ namespace BrainStorm.MLHelper
     {
         public static bool PeakWasLast = false;
         public static int PeakStreak = 0;
-        public static int StreakThreshold { get; set; }
+        public static bool ArtifactWasLast = false;
+        public static int ArtifactStreak = 0;
+        public static int PeakStreakThreshold { get; set; }
+        public static int ArtifactStreakThreshold { get; set; }
 
-        public ArtifiactCurator(int streakThreshold = 4)
+        public ArtifiactCurator(int peakStreakThreshold = 4, int artifactThresold = 3)
         {
-            StreakThreshold = streakThreshold;
+            PeakStreakThreshold = peakStreakThreshold;
+            ArtifactStreakThreshold = artifactThresold;
         }
 
         public bool IsArtifact(bool CurrPeak)
@@ -30,7 +34,22 @@ namespace BrainStorm.MLHelper
                 PeakStreak = 0;
                 PeakWasLast = false;
             }
-            return (PeakStreak > StreakThreshold);
+            return (PeakStreak > PeakStreakThreshold);
+        }
+
+        public bool IsArtifactSend(bool isArtifact)
+        {
+            if (isArtifact)
+            {
+                ArtifactStreak += 1;
+                ArtifactWasLast = true;
+            }
+            else
+            {
+                ArtifactStreak = 0;
+                ArtifactWasLast = false;
+            }
+            return ArtifactStreak > ArtifactStreakThreshold;
         }
     }
 }

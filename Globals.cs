@@ -14,6 +14,15 @@ namespace BrainStorm
             Error = 1,
             Status = 2
         }
+
+        public enum StrokeTypes
+        {
+            Output = 0,
+            Filter = 1,
+            CtrlZ = 2,
+            Waiting = 3
+        }
+
     }
 }
 

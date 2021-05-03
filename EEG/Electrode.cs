@@ -82,7 +82,6 @@ namespace BrainStorm.EEG
             int windowSizePeak = new int();
             double influencePeak = new double();
             double zThresholdPeak = new double();
-            bool isPreload = new bool();
 
             // change parameters based on whether band or raw eeg
             if (isBand)
