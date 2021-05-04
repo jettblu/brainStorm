@@ -16,7 +16,7 @@ namespace BrainStorm
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormSplashScreen());
+            Application.Run(new FormSetup());
         }
     }
 }

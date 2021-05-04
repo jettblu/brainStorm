@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrainStorm0));
             this.gboxOutput = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.numFreq = new System.Windows.Forms.NumericUpDown();
@@ -70,6 +71,8 @@
             this.btnStartTyping = new System.Windows.Forms.Button();
             this.Begin = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.cboxFeatureEvaluation = new System.Windows.Forms.CheckBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.gboxOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numShapeRow)).BeginInit();
@@ -466,7 +469,7 @@
             // 
             this.btnLoadFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnLoadFile.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnLoadFile.Location = new System.Drawing.Point(84, 72);
+            this.btnLoadFile.Location = new System.Drawing.Point(84, 87);
             this.btnLoadFile.Name = "btnLoadFile";
             this.btnLoadFile.Size = new System.Drawing.Size(119, 40);
             this.btnLoadFile.TabIndex = 28;
@@ -479,7 +482,7 @@
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.SystemColors.Info;
-            this.label11.Location = new System.Drawing.Point(13, 82);
+            this.label11.Location = new System.Drawing.Point(16, 97);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(65, 20);
             this.label11.TabIndex = 29;
@@ -493,7 +496,9 @@
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.cboxFeatureEvaluation);
             this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.cBoxBackTestWait);
             this.groupBox1.Controls.Add(this.btnLoadFile);
             this.groupBox1.Controls.Add(this.label11);
@@ -579,6 +584,29 @@
             this.label13.TabIndex = 31;
             this.label13.Text = "Delivery:";
             // 
+            // cboxFeatureEvaluation
+            // 
+            this.cboxFeatureEvaluation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cboxFeatureEvaluation.AutoSize = true;
+            this.cboxFeatureEvaluation.Checked = true;
+            this.cboxFeatureEvaluation.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cboxFeatureEvaluation.Location = new System.Drawing.Point(114, 65);
+            this.cboxFeatureEvaluation.Name = "cboxFeatureEvaluation";
+            this.cboxFeatureEvaluation.Size = new System.Drawing.Size(22, 21);
+            this.cboxFeatureEvaluation.TabIndex = 31;
+            this.cboxFeatureEvaluation.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.Info;
+            this.label14.Location = new System.Drawing.Point(19, 64);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(87, 20);
+            this.label14.TabIndex = 32;
+            this.label14.Text = "Evaluation:";
+            // 
             // BrainStorm0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -602,6 +630,7 @@
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.pboxInterface);
             this.Controls.Add(this.gboxOutput);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "BrainStorm0";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Brain Storm";
@@ -672,6 +701,8 @@
         private System.Windows.Forms.Button btnStartTyping;
         private System.Windows.Forms.Label Begin;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.CheckBox cboxFeatureEvaluation;
+        private System.Windows.Forms.Label label14;
     }
 }
 

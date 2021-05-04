@@ -47,5 +47,42 @@ namespace BrainStorm.Properties {
                 this["EmailPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("jett2.718hays@gmail.com")]
+        public string EmailAddress {
+            get {
+                return ((string)(this["EmailAddress"]));
+            }
+            set {
+                this["EmailAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("HmCIyDZbV4iuNsJqug0GkbBKgMYwfIvzf5sXxgoQ")]
+        public string EmotivID {
+            get {
+                return ((string)(this["EmotivID"]));
+            }
+            set {
+                this["EmotivID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("HxHdQGmJqJmO5sHI2rvh11eGDyaXDCNe4BeqSaWVnDuuaT5bajYwXsZwcNb5l6zmq5xsaFq65wGjnYKKI" +
+            "dOgjEk6bo8IzJTgSSDI3nw34bnca7hfnD14z6jQBApIr5WY")]
+        public string EmotivSecret {
+            get {
+                return ((string)(this["EmotivSecret"]));
+            }
+            set {
+                this["EmotivSecret"] = value;
+            }
+        }
     }
 }

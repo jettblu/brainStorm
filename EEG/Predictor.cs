@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Accord.MachineLearning;
 using Accord.MachineLearning.DecisionTrees;
+using Accord.MachineLearning.VectorMachines;
 using Accord.Statistics.Analysis;
 using Accord.Statistics.Models.Regression;
 using Accord.Statistics.Models.Regression.Linear;
@@ -24,6 +25,8 @@ namespace BrainStorm.EEG
         // Classification Models
         public static MinimumMeanDistanceClassifier MinimumMeanDistance { get; set; }
 
+        public static SupportVectorMachine SVM { get; set; }
+
         public static RandomForest RandomForest { get; set; }
         // data to use for frequency prediction
         public static double[] CurrPredictionPoints { get; set; }
@@ -35,11 +38,11 @@ namespace BrainStorm.EEG
         public static Normalizer FeatureNormalizer = new Normalizer();
         public static Dictionary<double, int> CurrPredictions = new Dictionary<double, int>();
         // percent of predictions needed to classify... hardcoded as a third
-        public static double VotingThreshold = Classification.FrequencyClasses.Count / 3;
+        public static double VotingThreshold = 1/Classification.FrequencyClasses.Count;
         // minimum number of predictions needed to classify
         public static double VoteTotalThreshold = Classification.FrequencyClasses.Count * 3;
         // indicate what stroke is for view
-        public static Globals.StrokeTypes StrokeType { get; set; }
+        public static Globals.StrokeTypes StrokeType = Globals.StrokeTypes.Waiting;
         // predicted language
         public static List<string> PredictedLanguage { get; set; }
 
@@ -47,7 +50,7 @@ namespace BrainStorm.EEG
 
 
 
-        public static void MakePrediction(bool normalize = true, bool usePca = false)
+        public static void MakePrediction(bool normalize = false, bool usePca = false)
         {
 
             if (normalize || usePca) StandardizePredictors();
@@ -76,10 +79,12 @@ namespace BrainStorm.EEG
             {
                 lgrPred = MultinomialLogisticRegression.Decide(CurrPredictionPoints);
                 lgrProb = MultinomialLogisticRegression.Probability(CurrPredictionPoints);
+                PredictedFrequencyClassifiers = lgrPred;
                 if (Classification.IsValidation)
                 {
                     Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Logistic Regression Predicted Frequency: {lgrPred} Probability: {lgrProb}");
                 }
+
 
             }
 
@@ -89,10 +94,15 @@ namespace BrainStorm.EEG
             {
                 mmdPred = MinimumMeanDistance.Decide(CurrPredictionPoints);
                 mmdScore = MinimumMeanDistance.Score(CurrPredictionPoints);
-                PredictedFrequencyClassifiers = mmdPred;
                 if (Classification.IsValidation)
                 {
-                    Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Minimun Distance Predicted Frequency: {PredictedFrequencyClassifiers}");
+                    Console.WriteLine(
+                        $"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Minimun Distance Predicted Frequency: {PredictedFrequencyClassifiers}");
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"MMD Predicted Frequency: {mmdPred} {mmdScore}");
                 }
 
             }
@@ -103,10 +113,32 @@ namespace BrainStorm.EEG
                 rfPred = RandomForest.Decide(CurrPredictionPoints);
                 if (Classification.IsValidation)
                 {
-                    Console.WriteLine($"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Random Forest Predicted Frequency: {rfPred}");
+                    Console.WriteLine(
+                        $"Real Frequency: {BrainStorm0.ClassificationShape.Hertz} Random Forest Predicted Frequency: {rfPred}");
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"Random Forest Predicted Frequency: {rfPred}");
                 }
 
             }
+            if (IsTyping)
+            {
+                UpdateTypingPredictions();
+            }
+        }
+
+        public static void UpdateTypingPredictions()
+        {
+            var freqKey = Convert.ToDouble(Predictor.PredictedFrequencyClassifiers);
+            // increment valus if prediction exists, set at one otherwise
+            if (CurrPredictions.ContainsKey(freqKey)) CurrPredictions[freqKey] += 1;
+            else
+            {
+                CurrPredictions[freqKey] = 1;
+            }
+
         }
 
         public static void Classify()
@@ -122,6 +154,13 @@ namespace BrainStorm.EEG
                     var winningShape = GetClassifiedShape();
                     if (winningShape == null) return;
                     IndicateStrokeType(winningShape);
+                    // reset all predictions after decision
+                    // make copy so can enumerate over keys
+                    var predKeysList = CurrPredictions.Keys.ToList();
+                    foreach (var pred in predKeysList)
+                    {
+                        CurrPredictions[pred] = 0;
+                    }
                 }
 
             }

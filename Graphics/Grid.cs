@@ -79,7 +79,24 @@ namespace BrainStorm.Graphics
                 shape.FlashEnabled = false;
             }
             AllShapes = new List<Shape>();
-            G.Clear(Color.Black);
+            var hasCleared = false;
+            while (hasCleared == false)
+            {
+
+                try
+            {
+                G.Clear(Color.Black);
+                hasCleared = true;
+            }
+            catch
+            {
+                  Console.WriteLine("Object in use somewhere else.");
+            }
+
+            }
+            
+      
+            
             DrawLines();
             try
             {

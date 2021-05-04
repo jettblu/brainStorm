@@ -35,7 +35,7 @@ namespace BrainStorm.EEG
         public static List<string> ClassificationElectrodes = new List<string>() {"AF3", "F7", "F3", "F4", "F8", "AF4"};
         public static List<int> ClassificationElectrodesIndices = new List<int>();
         //How many seconds to wait until considered pure... hardcoded
-        public const double PureSeconds = 2.5;
+        public const double PureSeconds = 0;
 
         // frequency classes used for SSVEP
         public static List<int> FrequencyClasses = new List<int>()
@@ -58,9 +58,10 @@ namespace BrainStorm.EEG
                 {
                     IsPure = true;
                 }
+
                 // for training...
                 // if we have collected enough samples at current frequency... display new
-                if (NumSamples == SamplesToCollect)
+                if (NumSamples == SamplesToCollect && !IsTyping)
                 {
                     NumUniqueFrequencyLabels += 1;
                     if (IsClassifier)
@@ -85,6 +86,11 @@ namespace BrainStorm.EEG
             }
         }
 
+        public static void ResetFlagStateTyping()
+        {
+            EEGDataCount = 0;
+            IsPure = false;
+        }
 
         public static void StartTrainProcess(int numUniqueLabels = 50)
         {   
@@ -127,7 +133,16 @@ namespace BrainStorm.EEG
             IsRunning = false;
             if (IsTraining)
             {   
-                Utils.UserMessage("Training successful!", messageType:Globals.MessageTypes.Status);
+                // don't show user message if running backtest with feature evaluation on
+                if (BrainStorm0.BackTest != null && SignalProcessor.IsBackTest && BrainStorm0.BackTest.FeatureEvaluation)
+                {
+
+                }
+                else
+                {
+                    Utils.UserMessage("Training successful!", messageType:Globals.MessageTypes.Status);
+                }
+                
                 Trainer.FitData();
             }
             if (IsValidation)
@@ -177,11 +192,13 @@ namespace BrainStorm.EEG
 
         // only show k frequencies, where k is # of classes to train/ validate
         // show frequencies in random order to simulate live selection
-        public static void DisplayNewFrequencyClassification()
+        public static void DisplayNewFrequencyClassification(bool switchLocation=true)
         {
             Random rnd = new Random();
             var freq = FrequencyClasses[rnd.Next(FrequencyClasses.Count)];
             CurrFrequency = freq;
+
+            
 
             // uncomment to write frequency label to console
             /*   if (IsTraining)
@@ -194,8 +211,26 @@ namespace BrainStorm.EEG
                    Console.WriteLine($"Predictor Frequency: {CurrFrequency}");
 
                }*/
-
+           
             BrainStorm0.ClassificationShape.Text = freq.ToString();
+            if (switchLocation)
+            {
+                if (CurrFrequency == FrequencyClasses[0])
+                {
+                    BrainStorm0.ClassificationShape.Row = 1;
+                    BrainStorm0.ClassificationShape.Col = 3;
+                }
+                if (CurrFrequency == FrequencyClasses[1])
+                {
+                    BrainStorm0.ClassificationShape.Row = 1;
+                    BrainStorm0.ClassificationShape.Col = 0;
+                }
+                if (CurrFrequency == FrequencyClasses[2])
+                {
+                    BrainStorm0.ClassificationShape.Row = 1;
+                    BrainStorm0.ClassificationShape.Col = 6;
+                }
+            }
         }
 
         // filter data, so we only recieve data from bands/ nodes we care about

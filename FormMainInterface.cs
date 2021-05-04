@@ -126,6 +126,7 @@ namespace BrainStorm
         {
             if (EEGLogger.IsConnected)
             {
+                Classification.IsClassifier = cBoxClassification.Checked;
                 Classification.IsTraining = true;
                 Classification.StartTrainProcess();
                 // enable validation after training
@@ -204,20 +205,36 @@ namespace BrainStorm
         }
 
         private void btnLoadFile_Click(object sender, EventArgs e)
-        {   
-            
+        {
+            Classification.IsClassifier = cBoxClassification.Checked;
             if (BackTestSelector.ShowDialog() != DialogResult.OK) return;
             BackTest = new BackTest();
+            BackTest.FeatureEvaluation = cboxFeatureEvaluation.Checked;
             SignalProcessor.IsBackTest = true;
             BackTest.MaxSpeed = cBoxBackTestWait.Checked;
             // attach event handlers for back test
             BackTest.OnBackTestBandDataRecieved += SignalProcessor.OnBandPowerRecieved;
             BackTest.OnBackTestEEGDataRecieved += SignalProcessor.OnEEGDataReceived;
-            Utils.UserMessage("Backtest will start after dialogue is closed.", messageType:Globals.MessageTypes.Status);
+            if (!BackTest.FeatureEvaluation)
+            {
+                Utils.UserMessage("Backtest will start after dialogue is closed.", messageType:Globals.MessageTypes.Status);
+            }
             new Thread(() =>
                 {
-
+                    
                     BackTest.HandleRecords(BackTestSelector.OpenFile());
+                    if (BackTest.FeatureEvaluation)
+                    {
+                        while (Classification.ClassificationElectrodes.Count > 0)
+                        {
+                            SignalProcessor.IsBackTest = true;
+                            Classification.IsClassifier = cBoxClassification.Checked;
+                            Trainer.PredictorPointsTrainRaw.Clear();
+                            Trainer.FrequencyLabelsRaw.Clear();
+                            Classification.ClassificationElectrodes.RemoveAt(Classification.ClassificationElectrodes.Count-1);
+                            BackTest.HandleRecords(BackTestSelector.OpenFile());
+                        }
+                    }
                     Utils.UserMessage("Backtesting Finished", messageType: Globals.MessageTypes.Status);
 
                 })
@@ -234,6 +251,8 @@ namespace BrainStorm
         private void btnStartTyping_Click(object sender, EventArgs e)
         {
             Classification.IsTyping = true;
+            Classification.IsRunning = true;
+            TypingViews.CreateInitialGrid();
         }
 
 

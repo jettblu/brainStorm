@@ -9,17 +9,22 @@ using Accord;
 using Accord.MachineLearning;
 using Accord.MachineLearning.DecisionTrees;
 using Accord.MachineLearning.DecisionTrees.Learning;
+using Accord.MachineLearning.VectorMachines;
+using Accord.MachineLearning.VectorMachines.Learning;
 using Accord.Math.Optimization;
 using Accord.Math.Optimization.Losses;
 using Accord.Statistics.Analysis;
 using Accord.Statistics.Filters;
+using Accord.Statistics.Kernels;
+using Accord.Statistics.Models.Markov;
+using Accord.Statistics.Models.Markov.Learning;
 using Accord.Statistics.Models.Regression;
 using Accord.Statistics.Models.Regression.Fitting;
 using Accord.Statistics.Models.Regression.Linear;
 using BrainStorm.Graphics;
 using BrainStorm.MLHelper;
-using MathNet.Numerics;
 using MathNet.Numerics.Statistics;
+using Polynomial = MathNet.Numerics.Polynomial;
 
 namespace BrainStorm.EEG
 {
@@ -39,7 +44,7 @@ namespace BrainStorm.EEG
         // # of trees in random forest.. hardcoded
         public const int NumTrees = 100;
 
-        public static void FitData(bool normalize = true, bool usePca = false)
+        public static void FitData(bool normalize = false, bool usePca = false)
         {   
             Predictor.FeatureNormalizer = new Normalizer();
             if(normalize || usePca) NormalizeFeatures();
@@ -183,7 +188,51 @@ namespace BrainStorm.EEG
             Predictor.MinimumMeanDistance.Learn(PredictorPointsTrain, FrequencyLabelsInt);
 
 
+            // -------------------------- Support Vector Machine ----------------------------------
+            // Declare the parameters and ranges to be searched
+            /*GridSearchRange[] ranges =
+            {
+                new GridSearchRange("complexity", new double[] { 0.00000001, 5.20, 0.30, 0.50 } ),
+            };*/
+
+
+            // Instantiate a new Grid Search algorithm for Kernel Support Vector Machines
+            /*            var gridsearch = new GridSearch<SupportVectorMachine>(ranges);
+
+                        // Set the fitting function for the algorithm
+                        gridsearch.Fitting = delegate (GridSearchParameterCollection parameters, out double error)
+                        {
+                            // The parameters to be tried will be passed as a function parameter.
+                            double complexity = parameters["complexity"].Value;
+
+                            // Use the parameters to build the SVM model
+                            SupportVectorMachine ksvm = new SupportVectorMachine( 2);
+
+
+                            // Create a new learning algorithm for SVMs
+                            SequentialMinimalOptimization smo = new SequentialMinimalOptimization(ksvm, PredictorPointsTrain, FrequencyLabelsInt);
+                            smo.Complexity = complexity;
+
+                            // Measure the model performance to return as an out parameter
+                            error = smo.Run();
+
+                            return ksvm; // Return the current model
+                        };
+
+
+                        // Declare some out variables to pass to the grid search algorithm
+                        GridSearchParameterCollection bestParameters; double minError;
+
+                        // Compute the grid search to find the best Support Vector Machine
+                        Predictor.SVM = gridsearch.Compute(out bestParameters, out minError);*/
+
+
+
         }
+
+      
+
+       
 
         public static void CalulateTrainStatisticsClassification()
         {
@@ -199,6 +248,9 @@ namespace BrainStorm.EEG
 
             var cmTree = GeneralConfusionMatrix.Estimate(Predictor.RandomForest, PredictorPointsTrain, FrequencyLabelsInt);
             Console.WriteLine($"RF CM: {cmTree} \n RF Error: {cmTree.Error} RF ACcuracy: {cmTree.Accuracy}");
+
+            var electrodeString = String.Join(",", ClassificationElectrodes);
+            Console.WriteLine($"Above Results for {electrodeString}");
         }
 
         public static void SetPrincipleComponents()

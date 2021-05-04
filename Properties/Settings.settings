@@ -8,5 +8,14 @@
     <Setting Name="EmailPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">!!242prank1sonyou</Value>
     </Setting>
+    <Setting Name="EmailAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">jett2.718hays@gmail.com</Value>
+    </Setting>
+    <Setting Name="EmotivID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">HmCIyDZbV4iuNsJqug0GkbBKgMYwfIvzf5sXxgoQ</Value>
+    </Setting>
+    <Setting Name="EmotivSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">HxHdQGmJqJmO5sHI2rvh11eGDyaXDCNe4BeqSaWVnDuuaT5bajYwXsZwcNb5l6zmq5xsaFq65wGjnYKKIdOgjEk6bo8IzJTgSSDI3nw34bnca7hfnD14z6jQBApIr5WY</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

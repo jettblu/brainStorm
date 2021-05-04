@@ -142,11 +142,17 @@ namespace BrainStorm.Graphics
                 DrawString(Text, B);
             }
             IsDisplayed = !IsDisplayed;
-            if (Classification.CurrFrequency != Hertz && Classification.IsRunning)
-            {
+            if (Classification.CurrFrequency != Hertz && (Classification.IsTraining || Classification.IsValidation))
+            {   
                 Hertz = Classification.CurrFrequency;
                 // indicate frequency has been updated
                 FrequencyUpdated = true;
+                BrainStorm0.MainGrid.RedrawGrid();
+                DrawBox();
+            }
+            if (Classification.IsTyping)
+            {
+                ViewOnTypingState();
             }
         }
 
@@ -184,14 +190,27 @@ namespace BrainStorm.Graphics
             CurrGrid.G.DrawString(innerText, TextFont, textBrush, x, y, stringFormat);
         }
 
-        public void CheckTypingState()
+        // changes view based on typing state
+        public void ViewOnTypingState()
         {
             if (Classification.IsTyping)
             {
-                if (Predictor.StrokeType == Globals.StrokeTypes.Waiting) return;
-                if (Predictor.StrokeType == Globals.StrokeTypes.Output) TypingViews.UpdateOutputView();
-                if (Predictor.StrokeType == Globals.StrokeTypes.Filter) TypingViews.FilterView();
-                if (Predictor.StrokeType == Globals.StrokeTypes.Filter) TypingViews.CtrlZView();
+                switch (Predictor.StrokeType)
+                {
+                    case Globals.StrokeTypes.Waiting:
+                        return;
+                    case Globals.StrokeTypes.Output:
+                        TypingViews.UpdateOutputView();
+                        break;
+                    case Globals.StrokeTypes.Filter:
+                        TypingViews.FilterView();
+                        break;
+                    case Globals.StrokeTypes.CtrlZ:
+                        TypingViews.CtrlZView();
+                        break;
+                }
+                // reset purity on view switch
+                Classification.ResetFlagStateTyping();
                 Predictor.StrokeType = Globals.StrokeTypes.Waiting;
             }
         }

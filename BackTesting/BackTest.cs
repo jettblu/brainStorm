@@ -20,6 +20,7 @@ namespace BrainStorm.BackTesting
         public event EventHandler<ArrayList> OnBackTestBandDataRecieved; // back test band data
         public bool ClassificationHasStarted = false;
         public bool MaxSpeed = false;
+        public bool FeatureEvaluation = false;
         public const int FrequencyCSVIndex = 6;
         public int ClassificationFrequency;
         public int TrainRowCount;
@@ -39,8 +40,9 @@ namespace BrainStorm.BackTesting
 
                     TrainRowCount += 1;
                     if (isBand)
-                    {
-                        Console.WriteLine("Backtest: Band Data Recieved.");
+                    {   
+                        // uncomment below to indicate data has been recieved
+                        // Console.WriteLine("Backtest: Band Data Recieved.");
                         if (!csv.GetField("AF3/theta ").Split('/')[FrequencyCSVIndex].Contains("null"))
                         {
                             if (!ClassificationHasStarted)
@@ -152,8 +154,9 @@ namespace BrainStorm.BackTesting
 
                     }
                     else
-                    {   
-                        Console.WriteLine("Backtest: Raw EEG Data Recieved.");
+                    {
+                        // uncomment below to indicate data has been recieved
+                        // Console.WriteLine("Backtest: Raw EEG Data Recieved.");
                         if (!csv.GetField("AF3 ").Split('/')[FrequencyCSVIndex].Contains("null"))
                         {
                             if (!ClassificationHasStarted)
@@ -169,7 +172,6 @@ namespace BrainStorm.BackTesting
 
                         var rawEEGData = new BackTestEEGRaw
                         {
-
                             AF3Raw = Convert.ToDouble(csv.GetField("AF3 ").Split('/')[0]),
                             F7Raw = Convert.ToDouble(csv.GetField("F7 ").Split('/')[0]),
                             F3Raw = Convert.ToDouble(csv.GetField("F3 ").Split('/')[0]),
@@ -184,7 +186,6 @@ namespace BrainStorm.BackTesting
                             F4Raw = Convert.ToDouble(csv.GetField("F4 ").Split('/')[0]),
                             F8Raw = Convert.ToDouble(csv.GetField("AF3 ").Split('/')[0]),
                             AF4Raw = Convert.ToDouble(csv.GetField("AF4 ").Split('/')[0]),
-
                         };
                         rawEEGData.CreateEventData();
                         OnBackTestEEGDataRecieved(this, rawEEGData.RawData);

@@ -9,8 +9,8 @@ namespace BrainStorm.CortexAccess
          * account on emotiv.com and create a Cortex app.
          * https://www.emotiv.com/my-account/cortex-apps/
          */
-        public static string AppClientId = "HmCIyDZbV4iuNsJqug0GkbBKgMYwfIvzf5sXxgoQ";
-        public static string AppClientSecret = "HxHdQGmJqJmO5sHI2rvh11eGDyaXDCNe4BeqSaWVnDuuaT5bajYwXsZwcNb5l6zmq5xsaFq65wGjnYKKIdOgjEk6bo8IzJTgSSDI3nw34bnca7hfnD14z6jQBApIr5WY";
+        public static string AppClientId = Properties.Settings.Default.EmotivID;
+        public static string AppClientSecret = Properties.Settings.Default.EmotivSecret;
 
     }
 

@@ -32,6 +32,7 @@ namespace BrainStorm.Graphics
             BrainStorm0.MainGrid.Cols = 7;
             BrainStorm0.MainGrid.Rows = 3;
             BrainStorm0.MainGrid.DrawLines();
+
             foreach (var likelyWord in autoComplete.LikelyWords)
             {
                 suggestedWordsPhrase += $"{likelyWord.Key}\n";
@@ -72,11 +73,12 @@ namespace BrainStorm.Graphics
         {
             var suggestedWordsPhrase = "The\nCan\nHello\nYou\nWhen";
             var suggestedLettersPhrase = "A\nE\nI\nH\nO\nR\nW";
-            var generalLettersPhrase = "B\nC\nF\nG\nJ\nK\nL\nM\nN\nP\nQ\nS\nT\nU\nV\nX\nY\nZ\n";
+            var generalLettersPhrase = "BC\nFG\nJK\nLM\nNP\nQS\nTU\nVX\nYZ\n";
 
-            List<string> suggestedWordsList = new List<string>();
-            List<string> suggestedLettersList = new List<string>();
-            List<string> generalLettersList = new List<string>();
+            List<string> suggestedWordsList = new List<string>(){"The", "Can", "Hello", "You", "When"};
+            List<string> suggestedLettersList = new List<string>() { "A", "E", "I", "O", "R", "W" };
+            List<string> generalLettersList = new List<string>(){ "B", "C", "F", "G", "J", "K", "L", "M",
+                "N", "P", "Q", "S", "T", "U", "V", "X", "Y", "Z" };
 
             BrainStorm0.MainGrid.ClearShapes();
             // create 3 by 1 space that will contain likely letters, likely words, and general letters bin
@@ -118,6 +120,8 @@ namespace BrainStorm.Graphics
             CreateSuggestionGrid(autoComplete);
         }
 
+
+        
         // currently assumes use of 3 classes... can easily be updated to handle more
         public static void FilterView()
         {   
@@ -126,16 +130,29 @@ namespace BrainStorm.Graphics
             var languageOptionsAString = "";
             var languageOptionsBString = "";
 
+            Predictor.PredictedLanguage.RemoveAt(0);
+
+            
+
             var languageOptionsAArray =
                 Predictor.PredictedLanguage.Take(Predictor.PredictedLanguage.Count / 2).ToList();
 
             var languageOptionsBArray =
                 Predictor.PredictedLanguage.Skip(Predictor.PredictedLanguage.Count / 2).ToList();
 
+            // add dummy language to language list if empty
+            if (languageOptionsBArray.Count == 0)
+            {
+                languageOptionsBArray.Add(" ");
+            }
+
+            if (languageOptionsAArray.Count == 0)
+            {
+                languageOptionsAArray.Add(" ");
+            }
 
             List<string> suggestedLanguageList = new List<string>();
-            List<string> OptionALanguageList = new List<string>();
-            List<string> OptionBLanguageList = new List<string>();
+            suggestedLanguageList.Add(suggestedLanguage);
 
 
             foreach (var langPiece in languageOptionsAArray)
@@ -161,10 +178,10 @@ namespace BrainStorm.Graphics
             suggestedLanguageShape.Language = suggestedLanguageList;
 
             var optionsAShape= new Shape(1, 0, Color.WhiteSmoke, BrainStorm0.MainGrid, Predictor.FrequencyClasses[1], languageOptionsAString);
-            optionsAShape.Language = OptionALanguageList;
+            optionsAShape.Language = languageOptionsAArray;
 
             var optionsBShape = new Shape(1, 6, Color.WhiteSmoke, BrainStorm0.MainGrid, Predictor.FrequencyClasses[2], languageOptionsBString);
-            optionsBShape.Language = OptionBLanguageList;
+            optionsBShape.Language = languageOptionsBArray;
 
             suggestedLanguageShape.DrawBox();
             optionsAShape.DrawBox();

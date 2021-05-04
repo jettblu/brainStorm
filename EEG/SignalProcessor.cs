@@ -156,7 +156,7 @@ namespace BrainStorm.EEG
             //vote count for blink decisions
             var voteCount = 0;
            
-
+            
             for (int i = 0; i < NumberElectrodes; i++)
             {
                 var currElectrode = GetElectrodeByName(ElectrodeNames[i]);
@@ -187,20 +187,24 @@ namespace BrainStorm.EEG
                 }
                 eegData[dataIndex] = dataChunk;
             }
+            var isPeak = voteCount >= ArtifactThresholdEEG;
 
-            // artifact detection
-            var isArtifact = ArtifactManager.IsArtifact(CurrPeak: voteCount >= ArtifactThresholdEEG);
+/*            if (isPeak) Console.WriteLine("Blinkkkkkkkkkkkk!");
+            // collect votes across electrodes and time
+            var isArtifact = ArtifactManager.IsArtifact(CurrPeak: isPeak);
             if (isArtifact)
             {
                 Console.WriteLine($"--------- Artifact Detected. Last Votecout: {voteCount} -------------");
-            }
-            var isSend = ArtifactManager.IsArtifactSend(isArtifact);
-            if (isSend && Classification.IsTyping)
+            }*/
+
+            // extend to multiple blinks
+            var isCtrlZ = ArtifactManager.IsArtifactCtrlZBinned(isPeak);
+            if(isCtrlZ) Console.WriteLine("Ctrl-z Initiated.");
+            if (isCtrlZ && Classification.IsTyping)
             {
                 Predictor.StrokeType = Globals.StrokeTypes.CtrlZ;
                 Console.WriteLine("Ctrl-z Initiated.");
             }
-
         }
 
 
@@ -237,6 +241,8 @@ namespace BrainStorm.EEG
 
                 // update classification parameters depending on whther training or predicting
                 currPredictorPoints = Classification.FilterBands(currPredictorPoints);
+
+                // --------training---------------
                 if (Classification.IsTraining)
                 {
                     trainingFreq = $"{BrainStorm0.ClassificationShape.Hertz}";
@@ -253,12 +259,17 @@ namespace BrainStorm.EEG
                     }
                     
                 }
+
+                // --------typing---------------
                 if (Classification.IsTyping)
                 {
                     Predictor.CurrPredictionPoints = currPredictorPoints.ToArray();
                     Predictor.MakePrediction();
+                    Console.WriteLine($"Typing Predicted Frequency: {Predictor.PredictedFrequencyClassifiers}");
                     Predictor.Classify();
                 }
+
+                // --------validation---------------
                 if (Classification.IsValidation)
                 {   
                     Predictor.CurrPredictionPoints = currPredictorPoints.ToArray();
