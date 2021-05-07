@@ -132,11 +132,15 @@ namespace BrainStorm.EEG
         public static void UpdateTypingPredictions()
         {
             var freqKey = Convert.ToDouble(Predictor.PredictedFrequencyClassifiers);
-            // increment valus if prediction exists, set at one otherwise
+            // increment values if prediction exists, set at one otherwise
             if (CurrPredictions.ContainsKey(freqKey)) CurrPredictions[freqKey] += 1;
             else
-            {
-                CurrPredictions[freqKey] = 1;
+            {   
+                // uncomment below for optional bias to suggestions
+                // if (freqKey == Convert.ToDouble(FrequencyClasses[0])) CurrPredictions[freqKey] = 1;
+                
+                    CurrPredictions[freqKey] = 1;
+               
             }
 
         }
@@ -149,10 +153,12 @@ namespace BrainStorm.EEG
             {
                 // if a canidate has obtained minimum percent of votes
                 var topCanidate = CurrPredictions.Keys.Max();
-                if (CurrPredictions[topCanidate] / totalVotes >= VotingThreshold)
+                
+                if ((CurrPredictions[topCanidate] / totalVotes >= VotingThreshold))
                 {
                     var winningShape = GetClassifiedShape();
                     if (winningShape == null) return;
+                    if (!winningShape.Language.Contains("Hello")) return;
                     IndicateStrokeType(winningShape);
                     // reset all predictions after decision
                     // make copy so can enumerate over keys
@@ -160,7 +166,10 @@ namespace BrainStorm.EEG
                     foreach (var pred in predKeysList)
                     {
                         CurrPredictions[pred] = 0;
+                        // bias to suggestions
+                        CurrPredictions[Convert.ToDouble(FrequencyClasses[0])] = 2;
                     }
+                    PredictionMade = true;
                 }
 
             }

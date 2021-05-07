@@ -71,11 +71,11 @@ namespace BrainStorm.Graphics
         }
         public static void CreateInitialGrid()
         {
-            var suggestedWordsPhrase = "The\nCan\nHello\nYou\nWhen";
+            var suggestedWordsPhrase = "Hello\nThe\nCan\nYou\nWhen";
             var suggestedLettersPhrase = "A\nE\nI\nH\nO\nR\nW";
             var generalLettersPhrase = "BC\nFG\nJK\nLM\nNP\nQS\nTU\nVX\nYZ\n";
 
-            List<string> suggestedWordsList = new List<string>(){"The", "Can", "Hello", "You", "When"};
+            List<string> suggestedWordsList = new List<string>(){ "Hello", "The", "Can", "You", "When"};
             List<string> suggestedLettersList = new List<string>() { "A", "E", "I", "O", "R", "W" };
             List<string> generalLettersList = new List<string>(){ "B", "C", "F", "G", "J", "K", "L", "M",
                 "N", "P", "Q", "S", "T", "U", "V", "X", "Y", "Z" };

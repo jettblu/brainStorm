@@ -35,12 +35,15 @@ namespace BrainStorm.EEG
         public static List<string> ClassificationElectrodes = new List<string>() {"AF3", "F7", "F3", "F4", "F8", "AF4"};
         public static List<int> ClassificationElectrodesIndices = new List<int>();
         //How many seconds to wait until considered pure... hardcoded
-        public const double PureSeconds = 0;
+        public const double PureSeconds = 2.5;
+        // how many samples to collect at each frequency
+        public static int SamplesToCollect = 8;
+        public static bool PredictionMade = false;
 
         // frequency classes used for SSVEP
         public static List<int> FrequencyClasses = new List<int>()
         {
-            6, 15, 35
+            15, 6, 35
         };
 
         // how many data points (of each type) have been collected for given train frequency
@@ -76,6 +79,14 @@ namespace BrainStorm.EEG
                     _eegDataCount = 0;
                     NumSamples = 0;
                     IsPure = false;
+                }
+
+                if (IsTyping && PredictionMade)
+                {
+                    _eegDataCount = 0;
+                    NumSamples = 0;
+                    IsPure = false;
+                    PredictionMade = false;
                 }
 
                 // stop training if we have recieved requested amount of samples
@@ -157,8 +168,7 @@ namespace BrainStorm.EEG
         }
 
 
-        // how many samples to collect at each frequency
-        public static int SamplesToCollect = 2;
+        
 
         public static void DisplayNewFrequencyRegression()
         {
@@ -192,7 +202,7 @@ namespace BrainStorm.EEG
 
         // only show k frequencies, where k is # of classes to train/ validate
         // show frequencies in random order to simulate live selection
-        public static void DisplayNewFrequencyClassification(bool switchLocation=true)
+        public static void DisplayNewFrequencyClassification(bool switchLocation=false)
         {
             Random rnd = new Random();
             var freq = FrequencyClasses[rnd.Next(FrequencyClasses.Count)];

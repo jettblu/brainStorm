@@ -202,7 +202,7 @@ namespace BrainStorm.EEG
             if(isCtrlZ) Console.WriteLine("Ctrl-z Initiated.");
             if (isCtrlZ && Classification.IsTyping)
             {
-                Predictor.StrokeType = Globals.StrokeTypes.CtrlZ;
+                
                 Console.WriteLine("Ctrl-z Initiated.");
             }
         }
