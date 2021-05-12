@@ -16,6 +16,7 @@ namespace BrainStorm
         public string emotivSecret = "";
         public string emailAddress = "";
         public string emailPassword = "";
+        public string emailAddressRecipient = "";
         public FormSetup()
         {
             InitializeComponent();
@@ -23,20 +24,29 @@ namespace BrainStorm
 
 
         private void btnLaunch_Click(object sender, EventArgs e)
-        {
-            if (! cBoxPrefilled.Checked)
+        {   
+            // change default values to those on form if specified
+            if (!cBoxPrefilled.Checked)
             {
-                emotivSecret = Properties.Settings.Default.EmotivSecret;
-                emotivID = Properties.Settings.Default.EmailPassword;
-                emailPassword = Properties.Settings.Default.EmailPassword;
-                emailAddress = Properties.Settings.Default.EmailAddress;
+                emailAddress = tboxEmailAddress.Text.Trim();
+                emotivID = tboxEmotivID.Text.Trim();
+                emotivSecret = tboxEmotivSecret.Text.Trim();
+                emailAddressRecipient = tboxEmailRecipient.Text.Trim();
+                emailPassword = tboxEmailPword.Text.Trim();
+
 
                 Properties.Settings.Default.EmotivSecret = emotivSecret;
                 Properties.Settings.Default.EmailPassword = emotivID;
                 Properties.Settings.Default.EmailPassword = emailPassword;
                 Properties.Settings.Default.EmailAddress = emailAddress;
+                Properties.Settings.Default.EmailAddressRecipient = emailAddressRecipient;
             }
+
             
+
+
+
+
             CloseForm();
         }
 
